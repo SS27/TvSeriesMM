@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Tv Series</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="label_add_show">Add show</string>
+    <string name="title_activity_search_show">Search for show</string>
+    <string name="action_search_label">Search</string>
+    <string name="action_search_clear">Clear search</string>
+    <string name="action_search_hint">Search show by title</string>
+    <string name="title_activity_show_info">Show information</string>
+    <string name="label_seasons">Seasons:</string>
+    <string name="label_unwatched_episodes">Unwatched episodes:</string>
+    <string name="title_activity_episodes">Unwatched episodes</string>
+    <string name="label_season">Season</string>
+    <string name="label_episodes_not_watched">episodes not watched</string>
+    <string name="title_activity_episode_list">List of episodes</string>
+    <string name="label_unwatched_all">Unwatched all</string>
+    <string name="label_watched_all">Watched all</string>
+    <string name="title_please_wait">Please wait...</string>
+    <string name="message_searching_for_show">Searching for show ...</string>
+    <string name="message_downloading_show_info">Downloading shows info ...</string>
+    <string name="message_all_episodes_marked_watched">All episodes marked as watched!</string>
+    <string name="message_all_episodes_marked_unwatched">All episodes marked as unwatched!</string>
+    <string name="label_no_shows">There are no shows added.</string>
+    <string name="label_no_unwatched_episodes">There are no unwatched episodes.</string>
+    <string name="label_btn_watched">Watched</string>
+    <string name="label_btn_unwatched">Unwatched</string>
+
+</resources>

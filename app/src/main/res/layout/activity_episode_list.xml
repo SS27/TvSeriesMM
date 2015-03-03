@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#C1A4C5"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    tools:context="com.spstanchev.tvseries.activities.EpisodesListActivity">
+
+    <ExpandableListView
+        android:id="@+id/expandableListViewP"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/checkBoxAllP" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Watched all"
+        android:id="@+id/checkBoxAllP"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
+</RelativeLayout>
