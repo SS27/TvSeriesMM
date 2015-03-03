@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.SystemClock;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.spstanchev.tvseries.services.WebAndNotificationService;
@@ -39,16 +38,16 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         calendar.set(Calendar.HOUR_OF_DAY, 8);
         calendar.set(Calendar.MINUTE, 30);
 
+        // Use ELAPSED_REALTIME_WAKEUP to trigger an alarm based on how much time has elapsed since the device was booted.
 //        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
 //                SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES,
 //                AlarmManager.INTERVAL_DAY, alarmIntent);
 
         // Set the alarm to fire at approximately 8:30 a.m., according to the device's
         // clock, and to repeat once a day.
-//        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-//                calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
-        // Wake up the device to fire a one-time alarm in one minute.
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 30*1000, alarmIntent);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
+
 
         // automatically restart the alarm when the device is rebooted.
         ComponentName receiver = new ComponentName(context, AlarmReceiver.class);
