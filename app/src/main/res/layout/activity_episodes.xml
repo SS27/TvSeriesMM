@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#255133"
-        android:paddingBottom="@dimen/margin_bottom_5dp"
+        android:layout_alignBottom="@dimen/margin_bottom_5dp"
         android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
         android:paddingRight="@dimen/activity_horizontal_margin">
 
