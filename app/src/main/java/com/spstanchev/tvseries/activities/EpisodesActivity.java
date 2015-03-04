@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.spstanchev.tvseries.R;
@@ -26,7 +27,6 @@ import java.util.HashMap;
 
 public class EpisodesActivity extends ActionBarActivity implements ExpandableListView.OnChildClickListener, EpisodeDialogInterface {
     private static final String TAG = EpisodesActivity.class.getSimpleName();
-    public static final String EXTRA_WATCHED_ALL = "com.spstanchev.tvseries.activities.EXTRA_WATCHED_ALL";
     private ArrayList<Episode> episodes, unwatchedEpisodes;
     private SeasonsAndEpisodesExpandableAdapter adapter;
     private ArrayList<Season> seasonsList, unwatchedSeasonsList; // header titles
@@ -38,7 +38,7 @@ public class EpisodesActivity extends ActionBarActivity implements ExpandableLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_episodes);
 
-        getAllEpisodes();
+        getAllEpisodesAndSetTitle();
         getUnwatched();
         getSeasonsList();
         getEpisodesForSeasons();
@@ -46,8 +46,10 @@ public class EpisodesActivity extends ActionBarActivity implements ExpandableLis
         setExpandableListView();
     }
 
-    private void getAllEpisodes() {
+    private void getAllEpisodesAndSetTitle() {
         Show show = getIntent().getExtras().getParcelable("com.spstanchev.tvseries" + Constants.TAG_SHOW);
+        TextView tvShowTitle = (TextView) findViewById(R.id.tvShowTitle);
+        tvShowTitle.setText(show.getName());
         episodes = show.getEpisodes();
     }
 

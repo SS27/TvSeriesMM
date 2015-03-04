@@ -16,7 +16,6 @@ import com.spstanchev.tvseries.receivers.AlarmReceiver;
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-    public static final String EXTRA_SELECT_UNWATCHED_TAB = "com.spstanchev.tvseries.activities.MainActivity." + "EXTRA_SELECT_UNWATCHED_TAB";
     private MainPagerAdapter pagerAdapter;
     private ViewPager viewPager;
     private AlarmReceiver alarm = new AlarmReceiver();
@@ -53,8 +52,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             tab.setText(pagerAdapter.getPageTitle(i));
             tab.setTabListener(this);
             actionBar.addTab(tab);
-            if (extras != null && i == 1 && extras.getBoolean(EXTRA_SELECT_UNWATCHED_TAB))
-                actionBar.selectTab(tab);
         }
 
     }

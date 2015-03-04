@@ -3,24 +3,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#98F3B3"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
     tools:context="com.spstanchev.tvseries.activities.EpisodesActivity">
+
+    <TextView
+        android:id="@+id/tvShowTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:paddingTop="@dimen/margin_bottom_5dp"
+        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
+        android:paddingBottom="@dimen/margin_bottom_5dp"
+        android:background="#255133"
+        android:textColor="#d7d6d4"/>
 
     <ExpandableListView
         android:id="@+id/expandableListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/checkBoxAll" />
+        android:layout_below="@+id/tvShowTitle"
+        android:layout_above="@+id/layoutBottom"/>
 
-    <CheckBox
-        android:layout_width="wrap_content"
+
+
+    <RelativeLayout
+        android:id="@+id/layoutBottom"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Watched all"
-        android:id="@+id/checkBoxAll"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:background="#255133"
+        android:paddingBottom="@dimen/margin_bottom_5dp"
+        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
+        android:paddingRight="@dimen/activity_horizontal_margin">
 
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Watched all"
+            android:id="@+id/checkBoxAll"
+            android:gravity="center"
+            android:textColor="#d7d6d4"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

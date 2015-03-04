@@ -17,13 +17,12 @@
         android:id="@+id/lvMyShows"
         android:paddingLeft="6dp"
         android:paddingRight="6dp"
-
         android:paddingBottom="1dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"/>
 
     <ImageButton
         android:id="@+id/btnAddShow"
@@ -34,5 +33,6 @@
         android:focusable="false"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 </RelativeLayout>

@@ -26,9 +26,9 @@
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textStyle="bold|italic" />
+            android:textStyle="bold|italic"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
 
         <RatingBar
             android:layout_width="wrap_content"
@@ -36,26 +36,23 @@
             android:id="@+id/ratingBar"
             android:stepSize="0.5"
             android:numStars="5"
-            android:layout_gravity="center_horizontal"
             android:progressDrawable="@xml/ratingbar_yellow"
-            android:isIndicator="true" />
+            android:isIndicator="true"
+            android:layout_marginLeft="@dimen/list_item_horizontal_margin"/>
 
         <TextView
             android:id="@+id/tvCountry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
 
         <TextView
             android:id="@+id/tvYear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-
-
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
     </LinearLayout>
 
 

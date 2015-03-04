@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.spstanchev.tvseries.R;
@@ -73,6 +74,8 @@ public class EpisodeListActivity extends ActionBarActivity implements Expandable
     }
 
     private void setContent() {
+        TextView tvShowTitle = (TextView) findViewById(R.id.tvShowTitle);
+        tvShowTitle.setText(currentShow.getName());
         getAllEpisodes(currentShow);
         getSeasonsList();
         getEpisodesForSeasons();

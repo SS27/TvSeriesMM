@@ -98,7 +98,7 @@ public class WebAndNotificationService extends IntentService {
 
     private Date getCurrentDate() {
         String currentDateAirdateFormat = Utils.getAirdateFormat().format(new Date());
-        Date currentDate = null;
+        Date currentDate;
         try {
             currentDate = Utils.getAirdateFormat().parse(currentDateAirdateFormat);
         } catch (ParseException e) {
@@ -173,7 +173,6 @@ public class WebAndNotificationService extends IntentService {
             resultIntent.putExtra("com.spstanchev.tvseries" + Constants.TAG_SHOW_ID, showId);
         } else {
             resultIntent = new Intent(this, MainActivity.class);
-            resultIntent.putExtra(MainActivity.EXTRA_SELECT_UNWATCHED_TAB, true);
         }
 
         //use stack builder object

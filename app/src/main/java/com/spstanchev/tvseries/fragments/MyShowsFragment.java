@@ -90,10 +90,14 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
             myShows = shows;
             adapter.updateCollection(myShows);
             tvEmpty.setVisibility(View.GONE);
+
         }
         else {
+            myShows = new ArrayList<>();
+            adapter.updateCollection(myShows);
             tvEmpty.setVisibility(View.VISIBLE);
         }
+
     }
 
 }

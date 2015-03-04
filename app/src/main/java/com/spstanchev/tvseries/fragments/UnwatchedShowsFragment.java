@@ -80,9 +80,13 @@ public class UnwatchedShowsFragment extends Fragment implements AdapterView.OnIt
         if (shows != null) {
             populateUnwatchedEpisodeArrayList(shows);
             adapter.updateCollection(myUnwatchedShows);
-            tvEmpty.setVisibility(View.GONE);
-        }
-        else {
+            if (myUnwatchedShows.size() > 0)
+                tvEmpty.setVisibility(View.GONE);
+            else
+                tvEmpty.setVisibility(View.VISIBLE);
+        } else {
+            myUnwatchedShows = new ArrayList<>();
+            adapter.updateCollection(myUnwatchedShows);
             tvEmpty.setVisibility(View.VISIBLE);
         }
     }
