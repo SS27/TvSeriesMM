@@ -26,11 +26,12 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class EpisodeListActivity extends ActionBarActivity implements ExpandableListView.OnChildClickListener, EpisodeDialogInterface {
-    private static final String TAG = SearchShowActivity.class.getSimpleName();
+    private static final String TAG = EpisodeListActivity.class.getSimpleName();
     private ArrayList<Episode> episodes;
     private SeasonsAndEpisodesExpandableAdapter adapter;
     private ArrayList<Season> seasonsList;
     private HashMap<Season, ArrayList<Episode>> listSeasonEpisodes;
+    private Show currentShow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,13 @@ public class EpisodeListActivity extends ActionBarActivity implements Expandable
         setContentView(R.layout.activity_episode_list);
 
         int showId = getIntent().getExtras().getInt("com.spstanchev.tvseries" + Constants.TAG_SHOW_ID, -1);
-        getShowAndSetContent(showId);
+
+        if (savedInstanceState != null) {
+            currentShow = savedInstanceState.getParcelable("currentShow");
+            setContent();
+        } else {
+            getShowAndSetContent(showId);
+        }
     }
 
     private void getShowAndSetContent(int showId) {
@@ -54,11 +61,8 @@ public class EpisodeListActivity extends ActionBarActivity implements Expandable
             @Override
             protected void onPostExecute(Show show) {
                 if (show != null){
-                    getAllEpisodes(show);
-                    getSeasonsList();
-                    getEpisodesForSeasons();
-                    setCheckBoxWatchedAll();
-                    setExpandableListView();
+                    currentShow = show;
+                    setContent();
                 }
                 else {
                     Log.e(TAG, "Something went wrong with getting the show from db!");
@@ -66,6 +70,14 @@ public class EpisodeListActivity extends ActionBarActivity implements Expandable
                 }
             }
         }.execute(showId);
+    }
+
+    private void setContent() {
+        getAllEpisodes(currentShow);
+        getSeasonsList();
+        getEpisodesForSeasons();
+        setCheckBoxWatchedAll();
+        setExpandableListView();
     }
 
     private void getAllEpisodes(Show show) {
@@ -156,7 +168,12 @@ public class EpisodeListActivity extends ActionBarActivity implements Expandable
 
     private void setExpandableListView() {
         ExpandableListView expandableListView = (ExpandableListView) findViewById(R.id.expandableListViewP);
-        adapter = new SeasonsAndEpisodesExpandableAdapter(this, seasonsList, listSeasonEpisodes);
+        SeasonsAndEpisodesExpandableAdapter savedAdapter = (SeasonsAndEpisodesExpandableAdapter) getLastCustomNonConfigurationInstance();
+        if (savedAdapter != null) {
+            adapter =  savedAdapter;
+        } else {
+            adapter = new SeasonsAndEpisodesExpandableAdapter(this, seasonsList, listSeasonEpisodes);
+        }
         expandableListView.setAdapter(adapter);
         expandableListView.setOnChildClickListener(this);
     }
@@ -196,6 +213,16 @@ public class EpisodeListActivity extends ActionBarActivity implements Expandable
 
     }
 
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return adapter;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable("currentShow", currentShow);
+        super.onSaveInstanceState(outState);
+    }
 }
 
 

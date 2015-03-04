@@ -12,8 +12,8 @@ import android.widget.Toast;
 import com.spstanchev.tvseries.R;
 import com.spstanchev.tvseries.adapters.SeasonsAndEpisodesExpandableAdapter;
 import com.spstanchev.tvseries.common.Constants;
-import com.spstanchev.tvseries.fragments.EpisodeDialogInterface;
 import com.spstanchev.tvseries.common.Utils;
+import com.spstanchev.tvseries.fragments.EpisodeDialogInterface;
 import com.spstanchev.tvseries.fragments.EpisodeInfoFragment;
 import com.spstanchev.tvseries.models.Episode;
 import com.spstanchev.tvseries.models.Season;
@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class EpisodesActivity extends ActionBarActivity implements ExpandableListView.OnChildClickListener, EpisodeDialogInterface {
-    private static final String TAG = SearchShowActivity.class.getSimpleName();
+    private static final String TAG = EpisodesActivity.class.getSimpleName();
     public static final String EXTRA_WATCHED_ALL = "com.spstanchev.tvseries.activities.EXTRA_WATCHED_ALL";
     private ArrayList<Episode> episodes, unwatchedEpisodes;
     private SeasonsAndEpisodesExpandableAdapter adapter;
@@ -125,7 +125,13 @@ public class EpisodesActivity extends ActionBarActivity implements ExpandableLis
 
     private void setExpandableListView() {
         ExpandableListView expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
-        adapter = new SeasonsAndEpisodesExpandableAdapter(this, unwatchedSeasonsList, listSeasonEpisodes);
+
+        SeasonsAndEpisodesExpandableAdapter savedAdapter = (SeasonsAndEpisodesExpandableAdapter) getLastCustomNonConfigurationInstance();
+        if (savedAdapter != null) {
+            adapter =  savedAdapter;
+        } else {
+            adapter = new SeasonsAndEpisodesExpandableAdapter(this, unwatchedSeasonsList, listSeasonEpisodes);
+        }
         expandableListView.setAdapter(adapter);
         expandableListView.setOnChildClickListener(this);
     }
@@ -163,4 +169,10 @@ public class EpisodesActivity extends ActionBarActivity implements ExpandableLis
     public void doNegativeClick() {
 
     }
+
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return adapter;
+    }
+
 }

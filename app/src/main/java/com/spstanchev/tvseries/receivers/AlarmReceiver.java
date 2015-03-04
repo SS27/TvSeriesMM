@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
@@ -20,6 +21,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     private AlarmManager alarmManager;
     // The pending intent that is triggered when the alarm fires.
     private PendingIntent alarmIntent;
+    SharedPreferences sharedPreferences;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -46,8 +48,14 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         // Set the alarm to fire at approximately 8:30 a.m., according to the device's
         // clock, and to repeat once a day.
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
+                calendar.getTimeInMillis() + AlarmManager.INTERVAL_FIFTEEN_MINUTES,
+                AlarmManager.INTERVAL_DAY, alarmIntent);
 
+        // store indication in SharedPreferences that alarm is enabled
+        sharedPreferences = context.getSharedPreferences("Preferences",  Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("alarmIsUp", true);
+        editor.commit();
 
         // automatically restart the alarm when the device is rebooted.
         ComponentName receiver = new ComponentName(context, AlarmReceiver.class);
@@ -64,6 +72,12 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
             alarmManager.cancel(alarmIntent);
         }
 
+        // store indication in SharedPreferences that alarm is disabled
+        sharedPreferences = context.getSharedPreferences("Preferences",  Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("alarmIsUp");
+        editor.commit();
+
         // disable automatic restart of the alarm when the device is rebooted.
         ComponentName receiver = new ComponentName(context, AlarmReceiver.class);
         PackageManager pm = context.getPackageManager();
@@ -74,8 +88,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
     }
 
     public boolean isAlarmUp (Context context){
-        return (PendingIntent.getBroadcast(context, 0,
-                new Intent(context, AlarmReceiver.class),
-                PendingIntent.FLAG_NO_CREATE) != null);
+        sharedPreferences = context.getSharedPreferences("Preferences",  Context.MODE_PRIVATE);
+        return (sharedPreferences.contains("alarmIsUp"));
     }
 }

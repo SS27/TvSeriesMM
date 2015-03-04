@@ -61,18 +61,26 @@ public class SeasonsAndEpisodesExpandableAdapter extends BaseExpandableListAdapt
                              boolean isLastChild, View convertView, ViewGroup parent) {
         final Episode episode = getChild(groupPosition, childPosition);
         final String name = episode.getName();
-
+        TextView txtListChild, txtAirStamp;
+        final CheckBox checkBox;
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.episode_expandable_list_item, null);
+
+            txtListChild = (TextView) convertView.findViewById(R.id.episodeNameExpandable);
+            txtAirStamp = (TextView) convertView.findViewById(R.id.episodeAirdateExpandable);
+            checkBox = (CheckBox) convertView.findViewById(R.id.checkBoxWatchedEpisode);
+
+            convertView.setTag(R.id.episodeNameExpandable, txtListChild);
+            convertView.setTag(R.id.episodeAirdateExpandable, txtAirStamp);
+            convertView.setTag(R.id.checkBoxWatchedEpisode, checkBox);
+        } else {
+            txtListChild = (TextView) convertView.getTag(R.id.episodeNameExpandable);
+            txtAirStamp = (TextView) convertView.getTag(R.id.episodeAirdateExpandable);
+            checkBox = (CheckBox) convertView.getTag(R.id.checkBoxWatchedEpisode);
         }
 
-        TextView txtListChild = (TextView) convertView
-                .findViewById(R.id.episodeNameExpandable);
-        TextView txtAirStamp = (TextView) convertView
-                .findViewById(R.id.episodeAirdateExpandable);
-        final CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.checkBoxWatchedEpisode);
         checkBox.setFocusable(false);
         checkBox.setChecked(episode.isWatched());
         Date currentDate = new Date();
@@ -133,14 +141,19 @@ public class SeasonsAndEpisodesExpandableAdapter extends BaseExpandableListAdapt
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
+        TextView lblListHeader;
         String headerTitle = "Season " + getGroup(groupPosition).getSeason();
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.season_header_expandable_list_item, null);
+            lblListHeader = (TextView) convertView.findViewById(R.id.seasonNameExpandable);
+
+            convertView.setTag(R.id.seasonNameExpandable, lblListHeader);
+        } else {
+            lblListHeader = (TextView) convertView.getTag(R.id.seasonNameExpandable);
         }
 
-        TextView lblListHeader = (TextView) convertView.findViewById(R.id.seasonNameExpandable);
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
 
@@ -156,4 +169,5 @@ public class SeasonsAndEpisodesExpandableAdapter extends BaseExpandableListAdapt
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
 }
