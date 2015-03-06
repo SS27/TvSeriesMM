@@ -22,28 +22,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tvShowTitle"
-        android:layout_above="@+id/layoutBottom"/>
+        android:layout_above="@+id/checkBoxAll"/>
 
-
-
-    <RelativeLayout
-        android:id="@+id/layoutBottom"
-        android:layout_width="match_parent"
+    <CheckBox
+        android:id="@+id/checkBoxAll"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#255133"
-        android:layout_alignBottom="@dimen/margin_bottom_5dp"
-        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
-        android:paddingRight="@dimen/activity_horizontal_margin">
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Watched all"
-            android:id="@+id/checkBoxAll"
-            android:gravity="center"
-            android:textColor="#d7d6d4"/>
-
-    </RelativeLayout>
+        android:layout_alignParentRight="true"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:text="@string/label_watched_all"/>
 
 </RelativeLayout>

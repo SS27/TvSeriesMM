@@ -27,7 +27,37 @@
             android:layout_marginBottom="@dimen/margin_bottom_5dp"/>
 
         <TextView
+            android:id="@+id/textViewType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#20766B"
+            android:layout_marginBottom="@dimen/margin_bottom_5dp"/>
+
+        <TextView
             android:id="@+id/textViewStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#20766B"
+            android:layout_marginBottom="@dimen/margin_bottom_5dp"/>
+
+        <TextView
+            android:id="@+id/textViewRuntime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#20766B"
+            android:layout_marginBottom="@dimen/margin_bottom_5dp"/>
+
+        <TextView
+            android:id="@+id/textViewPremiered"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
