@@ -46,7 +46,9 @@ public class ShowInfoFragment extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         View layout = inflater.inflate(R.layout.add_show_dialog, null);
-
+        TextView type = (TextView) layout.findViewById(R.id.textViewType);
+        TextView runtime = (TextView) layout.findViewById(R.id.textViewRuntime);
+        TextView premiered = (TextView) layout.findViewById(R.id.textViewPremiered);
         TextView summary = (TextView) layout.findViewById(R.id.textViewSummaryDialogue);
         TextView title = (TextView) layout.findViewById(R.id.textViewTitleDialog);
         ImageView credits = (ImageView) layout.findViewById(R.id.textViewCredits);
@@ -57,6 +59,10 @@ public class ShowInfoFragment extends DialogFragment {
         summary.setText(addedShow.getShow().getSummary());
         network.setText("Network: " + addedShow.getShow().getNetwork().getName());
         status.setText("Status: " + addedShow.getShow().getStatus());
+        type.setText("Type: " + addedShow.getShow().getType());
+        runtime.setText("Runtime: " + addedShow.getShow().getRuntime());
+        premiered.setText("Premiered on: " + addedShow.getShow().getPremiered());
+
         credits.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
