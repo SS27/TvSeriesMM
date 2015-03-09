@@ -81,7 +81,6 @@ public class SeasonsAndEpisodesExpandableAdapter extends BaseExpandableListAdapt
             checkBox = (CheckBox) convertView.getTag(R.id.checkBoxWatchedEpisode);
         }
 
-        checkBox.setFocusable(false);
         checkBox.setChecked(episode.isWatched());
         Date currentDate = new Date();
         Date episodeAirdate = Utils.getDateFromString(episode.getAirstamp(), Utils.getJsonAirstampFormat());
@@ -139,24 +138,43 @@ public class SeasonsAndEpisodesExpandableAdapter extends BaseExpandableListAdapt
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded,
+    public View getGroupView(final int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
         TextView lblListHeader;
-        String headerTitle = "Season " + getGroup(groupPosition).getSeason();
+        final CheckBox checkBox;
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.season_header_expandable_list_item, null);
             lblListHeader = (TextView) convertView.findViewById(R.id.seasonNameExpandable);
+            checkBox = (CheckBox) convertView.findViewById(R.id.cbWatchedSeason);
 
             convertView.setTag(R.id.seasonNameExpandable, lblListHeader);
+            convertView.setTag(R.id.cbWatchedSeason, checkBox);
         } else {
             lblListHeader = (TextView) convertView.getTag(R.id.seasonNameExpandable);
+            checkBox = (CheckBox) convertView.getTag(R.id.cbWatchedSeason);
         }
 
+        final Season currentSeason = getGroup(groupPosition);
+
+        String headerTitle = "Season " + currentSeason.getSeason();
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
 
+        checkBox.setChecked(currentSeason.watchedAll);
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentSeason.setWatchedAll(checkBox.isChecked());
+                for (Episode episode : listDataChild.get(listDataHeader.get(groupPosition))){
+                    episode.setWatched(checkBox.isChecked());
+                    UpdateEpisodeTask updateEpisodeTask = new UpdateEpisodeTask();
+                    updateEpisodeTask.execute(episode);
+                }
+                notifyDataSetChanged();
+            }
+        });
         return convertView;
     }
 
