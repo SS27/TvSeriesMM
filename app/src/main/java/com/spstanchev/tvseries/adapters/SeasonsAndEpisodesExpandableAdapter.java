@@ -31,18 +31,21 @@ public class SeasonsAndEpisodesExpandableAdapter extends BaseExpandableListAdapt
     // child data in format of header title, child title
     private HashMap<Season, ArrayList<Episode>> listDataChild;
 
+    OnWatchedChangeListener onWatchedChangeListener;
+
+    public interface OnWatchedChangeListener {
+        public void onWatchedChanged();
+    }
+
+    public void setOnWatchedChangeListener(OnWatchedChangeListener onWatchedChangeListener){
+        this.onWatchedChangeListener = onWatchedChangeListener;
+    }
+
     public SeasonsAndEpisodesExpandableAdapter(Context context, ArrayList<Season> listDataHeader,
                                                HashMap<Season, ArrayList<Episode>> listChildData) {
         this.context = context;
         this.listDataHeader = listDataHeader;
         this.listDataChild = listChildData;
-    }
-
-    public void updateCollection(ArrayList<Season> latestDataHeader,
-                                 HashMap<Season, ArrayList<Episode>> latestChildData) {
-        this.listDataHeader = latestDataHeader;
-        this.listDataChild = latestChildData;
-        notifyDataSetChanged();
     }
 
     @Override
@@ -57,7 +60,7 @@ public class SeasonsAndEpisodesExpandableAdapter extends BaseExpandableListAdapt
     }
 
     @Override
-    public View getChildView(int groupPosition, final int childPosition,
+    public View getChildView(final int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
         final Episode episode = getChild(groupPosition, childPosition);
         final String name = episode.getName();
@@ -92,13 +95,17 @@ public class SeasonsAndEpisodesExpandableAdapter extends BaseExpandableListAdapt
 
             @Override
             public void onClick(View v) {
-                if (checkBox.isChecked()) {
-                    episode.setWatched(true);
-                } else {
-                    episode.setWatched(false);
-                }
+                episode.setWatched(checkBox.isChecked());
                 UpdateEpisodeTask updateEpisodeTask = new UpdateEpisodeTask();
                 updateEpisodeTask.execute(episode);
+                Boolean newWatchedAll = getWatchedAll(checkBox.isChecked(), groupPosition);
+                if (getGroup(groupPosition).isWatchedAll() != newWatchedAll) {
+                    getGroup(groupPosition).setWatchedAll(newWatchedAll);
+                    notifyDataSetChanged();
+                    if(onWatchedChangeListener != null){
+                        onWatchedChangeListener.onWatchedChanged();
+                    }
+                }
             }
         });
         final String childName = episode.getNumber() + ". " + name;
@@ -106,6 +113,21 @@ public class SeasonsAndEpisodesExpandableAdapter extends BaseExpandableListAdapt
         txtListChild.setText(childName);
         txtAirStamp.setText("Aired on " + childDate);
         return convertView;
+    }
+
+    private Boolean getWatchedAll(boolean isChecked, int groupPosition) {
+        if (!isChecked)
+            return false;
+        Boolean watchedAll = true;
+        Date currentDate = new Date();
+        for (int i=getChildrenCount(groupPosition)-1; i >= 0; i--){
+            Date episodeAirdate = Utils.getDateFromString(getChild(groupPosition, i).getAirstamp(), Utils.getJsonAirstampFormat());
+            if (!getChild(groupPosition, i).isWatched() && currentDate.after(episodeAirdate)){
+                watchedAll = false;
+                break;
+            }
+        }
+        return watchedAll;
     }
 
     private class UpdateEpisodeTask extends AsyncTask<Episode, Void, Void>{
@@ -173,6 +195,9 @@ public class SeasonsAndEpisodesExpandableAdapter extends BaseExpandableListAdapt
                     updateEpisodeTask.execute(episode);
                 }
                 notifyDataSetChanged();
+                if(onWatchedChangeListener != null){
+                    onWatchedChangeListener.onWatchedChanged();
+                }
             }
         });
         return convertView;

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,30 +31,46 @@ public class EpisodesActivity extends ActionBarActivity implements ExpandableLis
     private ArrayList<Season> seasonsList, unwatchedSeasonsList; // header titles
     // child data in format of header title, child title
     private HashMap<Season, ArrayList<Episode>> listSeasonEpisodes;
+    private CheckBox checkBoxWatchedAll;
+    private TextView tvShowTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_episodes);
 
+        findViews();
         getAllEpisodesAndSetTitle();
-        getUnwatched();
-        getSeasonsList();
-        getEpisodesForSeasons();
-        setCheckBoxWatchedAll();
-        setExpandableListView();
+
+        if (savedInstanceState == null) {
+            getUnwatched();
+            getSeasonsList();
+            getEpisodesForSeasons();
+            setCheckBoxWatchedAllListener();
+            setExpandableListView();
+        }
+        else {
+            seasonsList = savedInstanceState.getParcelableArrayList("seasonsList");
+            unwatchedEpisodes = savedInstanceState.getParcelableArrayList("unwatchedEpisodes");
+            getEpisodesForSeasons();
+            setCheckBoxWatchedAllListener();
+            setExpandableListView();
+        }
+    }
+
+    private void findViews() {
+        checkBoxWatchedAll = (CheckBox) findViewById(R.id.checkBoxAll);
+        tvShowTitle = (TextView) findViewById(R.id.tvShowTitle);
     }
 
     private void getAllEpisodesAndSetTitle() {
         Show show = getIntent().getExtras().getParcelable("com.spstanchev.tvseries" + Constants.TAG_SHOW);
-        TextView tvShowTitle = (TextView) findViewById(R.id.tvShowTitle);
         tvShowTitle.setText(show.getName());
         episodes = show.getEpisodes();
     }
 
     private void getUnwatched() {
         unwatchedEpisodes = new ArrayList<>();
-
         Date currentDate = new Date();
         for (Episode episode : episodes) {
             Date episodeAirdate = Utils.getDateFromString(episode.getAirstamp(), Utils.getJsonAirstampFormat());
@@ -96,33 +111,64 @@ public class EpisodesActivity extends ActionBarActivity implements ExpandableLis
                 }
             }
             if (!episodesList.isEmpty()) {
+                seasonsList.get(i).setWatchedAll(isSeasonWatched(episodesList));
                 unwatchedSeasonsList.add(seasonsList.get(i));
                 listSeasonEpisodes.put(seasonsList.get(i), episodesList);
             }
         }
     }
 
-    private void setCheckBoxWatchedAll() {
-        CheckBox checkBoxWatchedAll = (CheckBox) findViewById(R.id.checkBoxAll);
-        checkBoxWatchedAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+    private void setCheckBoxWatchedAllListener() {
+        checkBoxWatchedAll.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    new AsyncTask<Void, Void, Void>() {
+            public void onClick(View v) {
+                Boolean watchedAll;
+                if (checkBoxWatchedAll.isChecked()) {
+                    Toast.makeText(EpisodesActivity.this, getString(R.string.message_all_episodes_marked_watched), Toast.LENGTH_LONG).show();
+                    watchedAll = true;
+                } else {
+                    Toast.makeText(EpisodesActivity.this, getString(R.string.message_all_episodes_marked_unwatched), Toast.LENGTH_LONG).show();
+                    watchedAll = false;
+                }
+                for (Episode episode : unwatchedEpisodes) {
+                    episode.setWatched(watchedAll);
+                    //update db
+                    new AsyncTask<Episode, Void, Void>() {
                         @Override
-                        protected Void doInBackground(Void... params) {
-                            for (Episode episode : unwatchedEpisodes) {
-                                episode.setWatched(true);
-                                ShowProvider.Helper.updateEpisode(getContentResolver(), episode);
-                            }
+                        protected Void doInBackground(Episode... params) {
+                            ShowProvider.Helper.updateEpisode(getContentResolver(), params[0]);
                             return null;
                         }
-                    }.execute();
-                    Toast.makeText(EpisodesActivity.this, "All episodes marked as watched!", Toast.LENGTH_LONG).show();
-                    finish();
+                    }.execute(episode);
                 }
+                getEpisodesForSeasons();
+                adapter.notifyDataSetChanged();
             }
         });
+    }
+
+    private boolean isSeasonWatched(ArrayList<Episode> episodes) {
+        boolean watchedAll = true;
+        Date currentDate = new Date();
+        for (int i = episodes.size() - 1; i >= 0; i--) {
+            Date episodeAirdate = Utils.getDateFromString(episodes.get(i).getAirstamp(), Utils.getJsonAirstampFormat());
+            if (!episodes.get(i).isWatched() && currentDate.after(episodeAirdate)) {
+                watchedAll = false;
+                break;
+            }
+        }
+        return watchedAll;
+    }
+
+    private void updateCheckBoxWatchedAll() {
+        boolean watchedAll = true;
+        for (int i = unwatchedSeasonsList.size() - 1; i >= 0; i--) {
+            if (!unwatchedSeasonsList.get(i).watchedAll) {
+                watchedAll = false;
+                break;
+            }
+        }
+        checkBoxWatchedAll.setChecked(watchedAll);
     }
 
     private void setExpandableListView() {
@@ -130,10 +176,16 @@ public class EpisodesActivity extends ActionBarActivity implements ExpandableLis
 
         SeasonsAndEpisodesExpandableAdapter savedAdapter = (SeasonsAndEpisodesExpandableAdapter) getLastCustomNonConfigurationInstance();
         if (savedAdapter != null) {
-            adapter =  savedAdapter;
+            adapter = savedAdapter;
         } else {
             adapter = new SeasonsAndEpisodesExpandableAdapter(this, unwatchedSeasonsList, listSeasonEpisodes);
         }
+        adapter.setOnWatchedChangeListener(new SeasonsAndEpisodesExpandableAdapter.OnWatchedChangeListener() {
+            @Override
+            public void onWatchedChanged() {
+                updateCheckBoxWatchedAll();
+            }
+        });
         expandableListView.setAdapter(adapter);
         expandableListView.setOnChildClickListener(this);
     }
@@ -177,4 +229,10 @@ public class EpisodesActivity extends ActionBarActivity implements ExpandableLis
         return adapter;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("seasonsList", seasonsList);
+        outState.putParcelableArrayList("unwatchedEpisodes", unwatchedEpisodes);
+        super.onSaveInstanceState(outState);
+    }
 }
