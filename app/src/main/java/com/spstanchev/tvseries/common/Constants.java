@@ -9,7 +9,7 @@ public interface Constants {
 
     //Fragments Titles
     public static final String FRAGMENT_TITLE_MY_SHOWS = "MY SHOWS";
-    public static final String FRAGMENT_TITLE_UNWATCHED = "UNWATCHED";
+    public static final String FRAGMENT_TITLE_UNWATCHED = "UNWATCHED SHOWS";
 
     //JSON URLs
     public static final String JSON_SHOW_URL = "http://api.tvmaze.com/shows/";

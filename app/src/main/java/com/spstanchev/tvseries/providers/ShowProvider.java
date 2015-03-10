@@ -316,10 +316,7 @@ public class ShowProvider extends ContentProvider {
             int rowNum = contentResolver.delete(contentUriWithId, null, null);
             Log.d(TAG, "Removing a row from show table... Number of rows removed is " + rowNum);
 
-            if (rowNum != 1)
-                return false;
-
-            return deleteEpisodes(contentResolver, id);
+            return (rowNum == 1 && deleteEpisodes(contentResolver, id));
 
         }
 
@@ -369,7 +366,7 @@ public class ShowProvider extends ContentProvider {
         }
 
         public static ArrayList<Show> getShows(ContentResolver contentResolver) {
-            Cursor c = contentResolver.query(Constants.SHOW_CONTENT_URI, null, null, null, "");
+            Cursor c = contentResolver.query(Constants.SHOW_CONTENT_URI, null, null, null, Constants.TAG_NAME);
             ArrayList<Show> suggestedShows = new ArrayList<>();
 
             if (!c.moveToFirst()) {

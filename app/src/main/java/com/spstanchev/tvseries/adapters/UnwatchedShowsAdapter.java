@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +19,7 @@ import java.util.ArrayList;
 /**
  * Created by Stefan on 2/21/2015.
  */
-public class UnwatchedShowsAdapter extends BaseAdapter {
+public class UnwatchedShowsAdapter extends BaseAdapter implements Filterable {
     private static final String TAG = MyShowsAdapter.class.getSimpleName();
     private ArrayList<UnwatchedShow> shows = new ArrayList<>();
     private Context context;
@@ -96,4 +98,33 @@ public class UnwatchedShowsAdapter extends BaseAdapter {
     }
 
 
+    @Override
+    public Filter getFilter() {
+        return (new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+                ArrayList<UnwatchedShow> filteredShows = new ArrayList<>();
+
+                constraint = constraint.toString().toLowerCase();
+                for (int i=0; i < getCount(); i++){
+                    String showName = getItem(i).getShow().getName();
+                    if (showName.toLowerCase().contains(constraint.toString())){
+                        filteredShows.add(getItem(i));
+                    }
+                }
+                results.count = filteredShows.size();
+                results.values = filteredShows;
+
+                return results;
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                ArrayList<UnwatchedShow> filteredShowsArrayList = (ArrayList<UnwatchedShow>) results.values;
+                updateCollection(filteredShowsArrayList);
+            }
+        });
+    }
 }

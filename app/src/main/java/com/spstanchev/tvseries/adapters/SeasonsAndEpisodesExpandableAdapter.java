@@ -30,8 +30,8 @@ public class SeasonsAndEpisodesExpandableAdapter extends BaseExpandableListAdapt
     private ArrayList<Season> listDataHeader;
     // child data in format of header title, child title
     private HashMap<Season, ArrayList<Episode>> listDataChild;
-
-    OnWatchedChangeListener onWatchedChangeListener;
+    //onWatchedChangeListener is used to notify the calling activity for change
+    private OnWatchedChangeListener onWatchedChangeListener;
 
     public interface OnWatchedChangeListener {
         public void onWatchedChanged();

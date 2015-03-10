@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -42,6 +46,12 @@ public class UnwatchedShowsFragment extends Fragment implements AdapterView.OnIt
         adapter = new UnwatchedShowsAdapter(activity);
         //query the db
         getShowsFromDb();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -112,5 +122,49 @@ public class UnwatchedShowsFragment extends Fragment implements AdapterView.OnIt
                 myUnwatchedShows.add(unwatchedShow);
             }
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_unwatched_shows, menu);
+        setUpSearchView(menu);
+    }
+
+    private void setUpSearchView(Menu menu) {
+        // Associate searchable configuration with the SearchView
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search_unwatched_shows).getActionView();
+        searchView.setQueryHint(getString(R.string.action_search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                if (!s.isEmpty()){
+                    adapter.getFilter().filter(s);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (s.isEmpty()) {
+                    adapter.updateCollection(myUnwatchedShows);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_search_my_shows : {
+                return true;
+            }
+            default :
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 }

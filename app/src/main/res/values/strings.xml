@@ -27,5 +27,6 @@
     <string name="label_no_unwatched_episodes">There are no unwatched episodes.</string>
     <string name="label_btn_watched">Watched</string>
     <string name="label_btn_unwatched">Unwatched</string>
+    <string name="add_shows">Add shows</string>
 
 </resources>

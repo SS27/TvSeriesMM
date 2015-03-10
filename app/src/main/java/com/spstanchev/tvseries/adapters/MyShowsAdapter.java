@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 /**
  * Created by Stefan on 2/8/2015.
  */
-public class MyShowsAdapter extends BaseAdapter {
+public class MyShowsAdapter extends BaseAdapter implements Filterable {
     private static final String TAG = MyShowsAdapter.class.getSimpleName();
     private ArrayList<Show> shows = new ArrayList<>();
     private Context context;
@@ -90,4 +92,34 @@ public class MyShowsAdapter extends BaseAdapter {
         return convertView;
     }
 
+    @Override
+    public Filter getFilter() {
+
+        return (new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+                ArrayList<Show> filteredShows = new ArrayList<>();
+
+                constraint = constraint.toString().toLowerCase();
+                for (int i=0; i < getCount(); i++){
+                    String showName = getItem(i).getName();
+                    if (showName.toLowerCase().contains(constraint.toString())){
+                        filteredShows.add(getItem(i));
+                    }
+                }
+                results.count = filteredShows.size();
+                results.values = filteredShows;
+
+                return results;
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                ArrayList<Show> filteredShowsArrayList = (ArrayList<Show>) results.values;
+                updateCollection(filteredShowsArrayList);
+            }
+        });
+    }
 }

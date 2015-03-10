@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -39,6 +43,12 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
         adapter = new MyShowsAdapter(activity);
         //query the database
         getShowsFromDb();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -91,8 +101,7 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
             adapter.updateCollection(myShows);
             tvEmpty.setVisibility(View.GONE);
 
-        }
-        else {
+        } else {
             myShows = new ArrayList<>();
             adapter.updateCollection(myShows);
             tvEmpty.setVisibility(View.VISIBLE);
@@ -100,4 +109,52 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        inflater.inflate(R.menu.menu_my_shows, menu);
+        setUpSearchView(menu);
+    }
+
+    private void setUpSearchView(Menu menu) {
+        // Associate searchable configuration with the SearchView
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search_my_shows).getActionView();
+        searchView.setQueryHint(getString(R.string.action_search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                if (!s.isEmpty()){
+                    adapter.getFilter().filter(s);
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (s.isEmpty()) {
+                    adapter.updateCollection(myShows);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search_my_shows: {
+                return true;
+            }
+            case R.id.action_add_show: {
+                Intent intent = new Intent(getActivity(), SearchShowActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
 }
