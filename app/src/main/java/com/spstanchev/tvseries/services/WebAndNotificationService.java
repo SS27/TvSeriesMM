@@ -150,8 +150,11 @@ public class WebAndNotificationService extends IntentService {
         inboxStyle.setBigContentTitle(contentTitle);
         inboxStyle.setSummaryText("TvSeries");
         for (AiringEpisode episode : episodes) {
-            inboxStyle.addLine(episode.getShowName() + "   S" + episode.getEpisode().getSeason()
-                    + "E" + episode.getEpisode().getNumber());
+            Date episodeAirdate = Utils.getDateFromString(episode.getEpisode().getAirstamp(), Utils.getJsonAirstampFormat());
+            String episodeAirtime = Utils.getAirtimeFormat().format(episodeAirdate);
+            inboxStyle.addLine(episode.getShowName() + "  S" + episode.getEpisode().getSeason()
+                    + "E" + episode.getEpisode().getNumber() + " on " + episode.getNetworkName()
+                    + " at " + episodeAirtime);
         }
 
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
