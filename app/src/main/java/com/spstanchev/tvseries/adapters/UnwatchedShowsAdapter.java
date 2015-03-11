@@ -28,6 +28,10 @@ public class UnwatchedShowsAdapter extends BaseAdapter implements Filterable {
         this.context = context;
     }
 
+    public ArrayList<UnwatchedShow> getShows() {
+        return shows;
+    }
+
     public void updateCollection(ArrayList<UnwatchedShow> latestCollection) {
         shows = latestCollection;
         notifyDataSetChanged();

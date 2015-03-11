@@ -90,7 +90,7 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent moreInfo = new Intent(getActivity(), ShowInfoActivity.class);
-        moreInfo.putExtra("com.spstanchev.tvseries" + Constants.TAG_SHOW, myShows.get(position));
+        moreInfo.putExtra("com.spstanchev.tvseries" + Constants.TAG_SHOW, adapter.getShows().get(position));
         startActivity(moreInfo);
     }
 

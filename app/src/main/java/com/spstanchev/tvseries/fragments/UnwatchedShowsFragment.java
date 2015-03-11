@@ -81,7 +81,7 @@ public class UnwatchedShowsFragment extends Fragment implements AdapterView.OnIt
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(getActivity(), EpisodesActivity.class);
-        intent.putExtra("com.spstanchev.tvseries" + Constants.TAG_SHOW, myUnwatchedShows.get(position).getShow());
+        intent.putExtra("com.spstanchev.tvseries" + Constants.TAG_SHOW, adapter.getShows().get(position).getShow());
         startActivity(intent);
     }
 

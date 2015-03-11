@@ -29,6 +29,10 @@ public class MyShowsAdapter extends BaseAdapter implements Filterable {
         this.context = context;
     }
 
+    public ArrayList<Show> getShows() {
+        return shows;
+    }
+
     public void updateCollection(ArrayList<Show> latestCollection) {
         shows = latestCollection;
         notifyDataSetChanged();
