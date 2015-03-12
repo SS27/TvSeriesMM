@@ -1,138 +1,118 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#B070FF"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    android:background="#B070FF"
     tools:context="com.spstanchev.tvseries.activities.ShowInfoActivity">
 
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/scrollView"
-        android:layout_gravity="center_horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="match_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <LinearLayout
+                <ImageView
+                    android:id="@+id/imageViewLarge"
+                    android:layout_width="150dp"
+                    android:layout_height="220dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/tv_series" />
+
+                <RatingBar
+                    android:id="@+id/showInfoRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_gravity="center_horizontal"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:progressDrawable="@xml/ratingbar_yellow"
+                    android:stepSize="0.5" />
 
-                    <ImageView
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="150dp"
-                        android:layout_height="220dp"
-                        android:id="@+id/imageViewLarge"
-                        android:background="@drawable/tv_series" />
-
-                    <RatingBar
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/showInfoRating"
-                        android:stepSize="0.5"
-                        android:numStars="5"
-                        android:layout_gravity="center_horizontal"
-                        android:progressDrawable="@xml/ratingbar_yellow"
-                        android:isIndicator="true" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Medium Text"
-                        android:layout_gravity="center_horizontal"
-                        android:id="@+id/showInfoPremiered" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Medium Text"
-                        android:layout_gravity="center_horizontal"
-                        android:id="@+id/showInfoStatus" />
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/showInfoPremiered"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_gravity="center_horizontal"
+                    android:text="Medium Text"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-
-                    <TextView
-                        android:layout_gravity="center_horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="Large Text"
-                        android:textStyle="bold"
-                        android:id="@+id/showInfoName" />
-
-
-                    <ScrollView
-                        android:layout_width="wrap_content"
-                        android:layout_height="280dp"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="20dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="5dp"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:paddingRight="5dp"
-                            android:text="Medium Text"
-                            android:layout_gravity="center_horizontal"
-                            android:id="@+id/showInfoSummary" />
-                    </ScrollView>
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content">
-
-
-                <ImageButton
-                    android:background="@drawable/custom_btn_tv_maze_purple"
+                <TextView
+                    android:id="@+id/showInfoStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_weight="2"
-                    android:id="@+id/imageButtonTvMaze"
-                    android:paddingRight="25dp" />
+                    android:layout_gravity="center_horizontal"
+                    android:text="Medium Text"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_marginBottom="@dimen/margin_bottom_5dp"/>
 
                 <ImageButton
                     android:id="@+id/imageButtonEpisodes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/custom_btn_episodes" />
+                    android:background="@drawable/custom_btn_episodes"
+                    android:layout_marginBottom="@dimen/margin_bottom_5dp"/>
 
                 <ImageButton
-                    android:background="@drawable/custom_btn_remove_show_purple"
+                    android:id="@+id/imageButtonRemove"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageButtonRemove"
+                    android:layout_gravity="center_horizontal"
                     android:layout_weight="3"
-                    android:layout_gravity="right" />
+                    android:background="@drawable/custom_btn_remove_show_purple"
+                    android:layout_marginBottom="@dimen/margin_bottom_5dp"/>
+
+                <ImageButton
+                    android:id="@+id/imageButtonTvMaze"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="2"
+                    android:background="@drawable/custom_btn_tv_maze_purple" />
             </LinearLayout>
 
-        </LinearLayout>
-    </ScrollView>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-</LinearLayout>
+
+                <TextView
+                    android:id="@+id/showInfoName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Large Text"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/showInfoSummary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="25dp"
+                    android:text="Medium Text"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
