@@ -87,9 +87,7 @@ public class SeasonsAndEpisodesExpandableAdapter extends BaseExpandableListAdapt
         checkBox.setChecked(episode.isWatched());
         Date currentDate = new Date();
         Date episodeAirdate = Utils.getDateFromString(episode.getAirstamp(), Utils.getJsonAirstampFormat());
-        checkBox.setEnabled(!currentDate.before(episodeAirdate));
-        if (episodeAirdate.after(currentDate))
-            checkBox.setChecked(false);
+        checkBox.setEnabled(currentDate.after(episodeAirdate));
 
         checkBox.setOnClickListener(new View.OnClickListener() {
 
@@ -184,15 +182,21 @@ public class SeasonsAndEpisodesExpandableAdapter extends BaseExpandableListAdapt
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
 
+        final Date currentDate = new Date();
+        Date episodeAirdate = Utils.getDateFromString(getChild(groupPosition, 0).getAirstamp(), Utils.getJsonAirstampFormat());
+        checkBox.setEnabled(currentDate.after(episodeAirdate));
         checkBox.setChecked(currentSeason.watchedAll);
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 currentSeason.setWatchedAll(checkBox.isChecked());
                 for (Episode episode : listDataChild.get(listDataHeader.get(groupPosition))){
-                    episode.setWatched(checkBox.isChecked());
-                    UpdateEpisodeTask updateEpisodeTask = new UpdateEpisodeTask();
-                    updateEpisodeTask.execute(episode);
+                    Date episodeAirdate = Utils.getDateFromString(episode.getAirstamp(), Utils.getJsonAirstampFormat());
+                    if (currentDate.after(episodeAirdate)) {
+                        episode.setWatched(checkBox.isChecked());
+                        UpdateEpisodeTask updateEpisodeTask = new UpdateEpisodeTask();
+                        updateEpisodeTask.execute(episode);
+                    }
                 }
                 notifyDataSetChanged();
                 if(onWatchedChangeListener != null){

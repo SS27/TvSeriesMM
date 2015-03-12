@@ -148,16 +148,14 @@ public class EpisodesActivity extends ActionBarActivity implements ExpandableLis
     }
 
     private boolean isSeasonWatched(ArrayList<Episode> episodes) {
-        boolean watchedAll = true;
         Date currentDate = new Date();
         for (int i = episodes.size() - 1; i >= 0; i--) {
             Date episodeAirdate = Utils.getDateFromString(episodes.get(i).getAirstamp(), Utils.getJsonAirstampFormat());
             if (!episodes.get(i).isWatched() && currentDate.after(episodeAirdate)) {
-                watchedAll = false;
-                break;
+                return false;
             }
         }
-        return watchedAll;
+        return true;
     }
 
     private void updateCheckBoxWatchedAll() {

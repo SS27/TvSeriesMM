@@ -35,7 +35,7 @@ public class SearchShowActivity extends ActionBarActivity implements AsyncJsonRe
     private ArrayList<AddedShow> showsList = new ArrayList<>();
     private ArrayList<AddedShow> suggestedShowsList;
     private SuggestedShowsAdapter adapter;
-    private ProgressDialog progressSuggestedShows, progressSearchShow;
+    private ProgressDialog progressSearchShow;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -47,11 +47,9 @@ public class SearchShowActivity extends ActionBarActivity implements AsyncJsonRe
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         setListView();
-        initProgressSuggestedShows(this);
         initProgressSearchShow(this);
         if (savedInstanceState == null) {
             if (Utils.isNetworkAvailable(this)) {
-                progressSuggestedShows.show();
                 downloadSuggestedShowsList();
             } else {
                 Toast.makeText(this, "You need internet access to add new shows!", Toast.LENGTH_LONG).show();
@@ -79,22 +77,9 @@ public class SearchShowActivity extends ActionBarActivity implements AsyncJsonRe
         progressSearchShow.setCancelable(true);
     }
 
-    private void initProgressSuggestedShows(Context context) {
-        progressSuggestedShows = new ProgressDialog(context);
-        progressSuggestedShows.setTitle(getString(R.string.title_please_wait));
-        progressSuggestedShows.setMessage(getString(R.string.message_downloading_show_info));
-        progressSuggestedShows.setIndeterminate(true);
-        progressSuggestedShows.setCancelable(false);
-    }
-
     private void dismissProgressSearchShow() {
         if (progressSearchShow != null && progressSearchShow.isShowing())
             progressSearchShow.dismiss();
-    }
-
-    private void dismissProgressSuggestedShows() {
-        if (progressSuggestedShows != null && progressSuggestedShows.isShowing())
-            progressSuggestedShows.dismiss();
     }
 
     @Override
@@ -175,9 +160,6 @@ public class SearchShowActivity extends ActionBarActivity implements AsyncJsonRe
         showsList.add(addedShow);
         //update the adapter showsList
         adapter.updateCollection(showsList);
-
-        if (showsList.size() > 5 && progressSuggestedShows.isShowing())
-            dismissProgressSuggestedShows();
     }
 
     @Override
@@ -209,7 +191,6 @@ public class SearchShowActivity extends ActionBarActivity implements AsyncJsonRe
 
     @Override
     protected void onDestroy() {
-        dismissProgressSuggestedShows();
         dismissProgressSearchShow();
         super.onDestroy();
     }

@@ -149,16 +149,20 @@ public class EpisodeListActivity extends ActionBarActivity implements Expandable
                     Toast.makeText(EpisodeListActivity.this, getString(R.string.message_all_episodes_marked_unwatched), Toast.LENGTH_LONG).show();
                     watchedAll = false;
                 }
+                Date currentDate = new Date();
                 for (Episode episode : episodes) {
-                    episode.setWatched(watchedAll);
-                    //update db
-                    new AsyncTask<Episode, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Episode... params) {
-                            ShowProvider.Helper.updateEpisode(getContentResolver(), params[0]);
-                            return null;
-                        }
-                    }.execute(episode);
+                    Date episodeAirdate = Utils.getDateFromString(episode.getAirstamp(), Utils.getJsonAirstampFormat());
+                    if (currentDate.after(episodeAirdate)) {
+                        episode.setWatched(watchedAll);
+                        //update db
+                        new AsyncTask<Episode, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Episode... params) {
+                                ShowProvider.Helper.updateEpisode(getContentResolver(), params[0]);
+                                return null;
+                            }
+                        }.execute(episode);
+                    }
                 }
                 getEpisodesForSeasons();
                 adapter.notifyDataSetChanged();
@@ -178,16 +182,17 @@ public class EpisodeListActivity extends ActionBarActivity implements Expandable
     }
 
     private boolean isSeasonWatched(ArrayList<Episode> episodes) {
-        boolean watchedAll = true;
         Date currentDate = new Date();
+        Date episodeAirdate = Utils.getDateFromString(episodes.get(0).getAirstamp(), Utils.getJsonAirstampFormat());
+        if (episodeAirdate.after(currentDate))
+            return false;
         for (int i = episodes.size() - 1; i >= 0; i--) {
-            Date episodeAirdate = Utils.getDateFromString(episodes.get(i).getAirstamp(), Utils.getJsonAirstampFormat());
+            episodeAirdate = Utils.getDateFromString(episodes.get(i).getAirstamp(), Utils.getJsonAirstampFormat());
             if (!episodes.get(i).isWatched() && currentDate.after(episodeAirdate)) {
-                watchedAll = false;
-                break;
+                return false;
             }
         }
-        return watchedAll;
+        return true;
     }
 
     private void setExpandableListView() {
