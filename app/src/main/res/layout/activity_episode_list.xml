@@ -22,7 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/checkBoxAllP"
-        android:layout_below="@+id/tvShowTitle" />
+        android:layout_below="@+id/tvShowTitle"
+        android:scrollbarStyle="outsideInset"/>
 
     <CheckBox
         android:id="@+id/checkBoxAllP"

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
     private MyShowsAdapter adapter;
     private ArrayList<Show> myShows;
     private TextView tvEmpty;
+    private ImageView ivBtnAddShow;
 
     @Override
     public void onAttach(Activity activity) {
@@ -69,7 +71,7 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
 
 
         tvEmpty = (TextView) rootView.findViewById(R.id.tvEmptyShowList);
-        tvEmpty.setVisibility(View.GONE);
+        ivBtnAddShow = (ImageView) rootView.findViewById(R.id.btnAddShow);
 
         return rootView;
     }
@@ -100,11 +102,13 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
             myShows = shows;
             adapter.updateCollection(myShows);
             tvEmpty.setVisibility(View.GONE);
+            ivBtnAddShow.setVisibility(View.GONE);
 
         } else {
             myShows = new ArrayList<>();
             adapter.updateCollection(myShows);
             tvEmpty.setVisibility(View.VISIBLE);
+            ivBtnAddShow.setVisibility(View.VISIBLE);
         }
 
     }

@@ -16,8 +16,6 @@
         android:id="@+id/lvUnwatchedShows"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="1dp"
-        android:paddingLeft="6dp"
-        android:paddingRight="6dp" />
+        android:scrollbarStyle="outsideInset"/>
 
 </RelativeLayout>

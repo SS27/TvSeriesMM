@@ -23,7 +23,7 @@
     <string name="message_downloading_show_info">Downloading shows info ...</string>
     <string name="message_all_episodes_marked_watched">All episodes marked as watched!</string>
     <string name="message_all_episodes_marked_unwatched">All episodes marked as unwatched!</string>
-    <string name="label_no_shows">There are no shows added.</string>
+    <string name="label_no_shows">There are no shows added yet.</string>
     <string name="label_no_unwatched_episodes">There are no unwatched episodes.</string>
     <string name="label_btn_watched">Watched</string>
     <string name="label_btn_unwatched">Unwatched</string>
