@@ -55,10 +55,12 @@ public class AsyncDownloadShow extends AsyncTask<String, Void, ArrayList<Show>> 
 
     @Override
     protected void onPostExecute(ArrayList<Show> shows) {
-        if (isQuery)
-            asyncJsonResponse.handleQueryShowsJsonResponse(shows);
-        else
-            asyncJsonResponse.handleShowJsonResponse(shows.get(0));
+        if (!shows.isEmpty()) {
+            if (isQuery)
+                asyncJsonResponse.handleQueryShowsJsonResponse(shows);
+            else
+                asyncJsonResponse.handleShowJsonResponse(shows.get(0));
+        }
     }
 
     private ArrayList<Show> getShowsFromJson(String result) {
@@ -89,10 +91,13 @@ public class AsyncDownloadShow extends AsyncTask<String, Void, ArrayList<Show>> 
             Log.v(TAG, "Caught JsonException when trying to get JSONObject from " + result);
         }
 
-        return null;
+        return shows;
     }
 
     private Show getShow(JSONObject showJsonObject) {
+        if (JsonUtils.getJsonInteger(showJsonObject, Constants.TAG_STATUS) != -1){
+            return null;
+        }
         Show show = new Show();
         show.setId(JsonUtils.getJsonInteger(showJsonObject, Constants.TAG_ID));
         show.setUrl(JsonUtils.getJsonString(showJsonObject, Constants.TAG_URL));

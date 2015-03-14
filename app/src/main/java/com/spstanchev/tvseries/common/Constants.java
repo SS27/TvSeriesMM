@@ -70,6 +70,6 @@ public interface Constants {
     public static final Uri CAST_CONTENT_URI = Uri.parse(CAST_URL);
 
     //Suggested shows ids
-    public static final int[] suggestedShowsIds = {335, 13, 2, 67, 58, 6, 177, 111, 63, 62, 210, 73, 133, 31, 88};
+    //public static final int[] suggestedShowsIds = {335, 13, 2, 67, 58, 6, 177, 111, 63, 62, 210, 73, 133, 31, 88};
 
 }

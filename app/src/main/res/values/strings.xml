@@ -8,7 +8,9 @@
     <string name="title_activity_search_show">Search for show</string>
     <string name="action_search_label">Search</string>
     <string name="action_search_clear">Clear search</string>
-    <string name="action_search_hint">Search show by title</string>
+    <string name="action_search_hint">Search for show</string>
+    <string name="action_search_my_shows_hint">Search my shows</string>
+    <string name="action_search_unwatched_shows_hint">Search unwatched shows</string>
     <string name="title_activity_show_info">Show information</string>
     <string name="label_seasons">Seasons:</string>
     <string name="label_unwatched_episodes">Unwatched episodes:</string>

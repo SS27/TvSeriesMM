@@ -7,6 +7,8 @@ import android.os.Environment;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -31,8 +33,7 @@ public class Utils {
     }
 
     public static SimpleDateFormat getAirdateFormat() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf;
+        return new SimpleDateFormat("yyyy-MM-dd");
     }
 
     public static SimpleDateFormat getAirtimeFormat() {
@@ -51,6 +52,15 @@ public class Utils {
             e.printStackTrace();
         }
         return date;
+    }
+
+    public static ArrayList<Integer> getUniqueRandomNumbers(int min, int max) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = min; i <= max; i++) {
+            list.add(i);
+        }
+        Collections.shuffle(list);
+        return list;
     }
 
 }

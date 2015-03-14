@@ -89,7 +89,7 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
     private void getShowsFromDb() {
         //query db for current shows
         AsyncQueryShowsFromDb queryAsyncTask = new AsyncQueryShowsFromDb(this, getActivity().getContentResolver());
-        queryAsyncTask.execute();
+        queryAsyncTask.execute(false);
     }
 
     @Override
@@ -126,11 +126,11 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
     private void setUpSearchView(Menu menu) {
         // Associate searchable configuration with the SearchView
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search_my_shows).getActionView();
-        searchView.setQueryHint(getString(R.string.action_search_hint));
+        searchView.setQueryHint(getString(R.string.action_search_my_shows_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                if (!s.isEmpty()){
+                if (!TextUtils.isEmpty(s)){
                     adapter.getFilter().filter(s);
                     return true;
                 }

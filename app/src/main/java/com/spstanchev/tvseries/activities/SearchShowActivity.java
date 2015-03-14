@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -16,8 +17,8 @@ import android.widget.Toast;
 import com.spstanchev.tvseries.R;
 import com.spstanchev.tvseries.adapters.SuggestedShowsAdapter;
 import com.spstanchev.tvseries.common.Constants;
-import com.spstanchev.tvseries.fragments.ShowDialogInterface;
 import com.spstanchev.tvseries.common.Utils;
+import com.spstanchev.tvseries.fragments.ShowDialogInterface;
 import com.spstanchev.tvseries.fragments.ShowInfoFragment;
 import com.spstanchev.tvseries.models.AddedShow;
 import com.spstanchev.tvseries.models.Show;
@@ -98,29 +99,12 @@ public class SearchShowActivity extends ActionBarActivity implements AsyncJsonRe
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                if (!s.isEmpty()) {
-                    if (Utils.isNetworkAvailable(SearchShowActivity.this)) {
-                        if (suggestedShowsList == null)
-                            suggestedShowsList = new ArrayList<>(showsList);
-                        try {
-                            String encoded = URLEncoder.encode(s, "UTF-8");
-                            progressSearchShow.show();
-                            AsyncDownloadShow taskQueryShows = new AsyncDownloadShow(SearchShowActivity.this);
-                            taskQueryShows.execute(Constants.JSON_QUERY_SHOWS_URL + encoded);
-                            return true;
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        Toast.makeText(SearchShowActivity.this, "You need internet access to search for new shows!", Toast.LENGTH_LONG).show();
-                    }
-                }
-                return false;
+                return (!TextUtils.isEmpty(s) && searchForShow(s));
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                if (s.isEmpty() && suggestedShowsList != null) {
+                if (TextUtils.isEmpty(s) && suggestedShowsList != null) {
                     showsList = suggestedShowsList;
                     adapter.updateCollection(showsList);
                     return true;
@@ -128,6 +112,26 @@ public class SearchShowActivity extends ActionBarActivity implements AsyncJsonRe
                     return false;
             }
         });
+    }
+
+    private boolean searchForShow(String s) {
+        if (Utils.isNetworkAvailable(this)) {
+            if (suggestedShowsList == null)
+                suggestedShowsList = new ArrayList<>(showsList);
+            try {
+                String encoded = URLEncoder.encode(s, "UTF-8");
+                progressSearchShow.show();
+                AsyncDownloadShow taskQueryShows = new AsyncDownloadShow(this);
+                taskQueryShows.execute(Constants.JSON_QUERY_SHOWS_URL + encoded);
+                return true;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(this, "You need internet access to search for new shows!", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -145,9 +149,10 @@ public class SearchShowActivity extends ActionBarActivity implements AsyncJsonRe
     }
 
     private void downloadSuggestedShowsList() {
-        for (int i = 0; i < Constants.suggestedShowsIds.length; i++) {
+        ArrayList<Integer> randList = Utils.getUniqueRandomNumbers(1,500);
+        for (int i = 0; i < 15; i++) {
             AsyncDownloadShow taskDownloadSuggestedShow = new AsyncDownloadShow(this);
-            taskDownloadSuggestedShow.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Constants.JSON_SHOW_URL + Constants.suggestedShowsIds[i]);
+            taskDownloadSuggestedShow.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Constants.JSON_SHOW_URL + randList.get(i));
         }
     }
 

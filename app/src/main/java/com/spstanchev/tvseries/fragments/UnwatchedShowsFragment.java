@@ -73,13 +73,13 @@ public class UnwatchedShowsFragment extends Fragment implements AdapterView.OnIt
     public void onResume() {
         super.onResume();
         //query the db
-        getShowsFromDb();
+        getShowsAndEpisodesFromDb();
     }
 
-    private void getShowsFromDb() {
+    private void getShowsAndEpisodesFromDb() {
         //query db for current shows
         AsyncQueryShowsFromDb queryAsyncTask = new AsyncQueryShowsFromDb(this, getActivity().getContentResolver());
-        queryAsyncTask.execute();
+        queryAsyncTask.execute(true);
     }
 
     @Override
@@ -138,11 +138,11 @@ public class UnwatchedShowsFragment extends Fragment implements AdapterView.OnIt
     private void setUpSearchView(Menu menu) {
         // Associate searchable configuration with the SearchView
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search_unwatched_shows).getActionView();
-        searchView.setQueryHint(getString(R.string.action_search_hint));
+        searchView.setQueryHint(getString(R.string.action_search_unwatched_shows_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                if (!s.isEmpty()){
+                if (!TextUtils.isEmpty(s)){
                     adapter.getFilter().filter(s);
                     return true;
                 }

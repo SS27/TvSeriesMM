@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -64,7 +65,7 @@ public class EpisodeInfoFragment extends DialogFragment {
         ImageView tvCredits = (ImageView) dialogLayout.findViewById(R.id.ivCredits);
 
         tvTitleDialog.setText(currentEpisode.getName());
-        if (currentEpisode.getImage() != null){
+        if (!TextUtils.isEmpty(currentEpisode.getImage().getOriginal())){
             Picasso.with(getActivity())
                     .load(currentEpisode.getImage().getOriginal())
                     .into(ivPoster);

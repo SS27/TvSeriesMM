@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Created by Stefan on 2/23/2015.
  */
-public class AsyncQueryShowsFromDb extends AsyncTask<Void, Void, ArrayList<Show>> {
+public class AsyncQueryShowsFromDb extends AsyncTask<Boolean, Void, ArrayList<Show>> {
     private AsyncDbResponse asyncDbResponseIf;
     private ContentResolver contentResolver;
 
@@ -21,8 +21,8 @@ public class AsyncQueryShowsFromDb extends AsyncTask<Void, Void, ArrayList<Show>
     }
 
     @Override
-    protected ArrayList<Show> doInBackground(Void... params) {
-        return ShowProvider.Helper.getShows(contentResolver);
+    protected ArrayList<Show> doInBackground(Boolean... params) {
+        return ShowProvider.Helper.getShows(contentResolver, params[0]);
     }
 
     @Override

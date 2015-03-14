@@ -365,7 +365,7 @@ public class ShowProvider extends ContentProvider {
             }
         }
 
-        public static ArrayList<Show> getShows(ContentResolver contentResolver) {
+        public static ArrayList<Show> getShows(ContentResolver contentResolver, boolean getEpisodes) {
             Cursor c = contentResolver.query(Constants.SHOW_CONTENT_URI, null, null, null, Constants.TAG_NAME);
             ArrayList<Show> suggestedShows = new ArrayList<>();
 
@@ -405,7 +405,9 @@ public class ShowProvider extends ContentProvider {
                     links.setPreviousepisode(c.getString(c.getColumnIndex(Constants.TAG_LINKS + Constants.TAG_PREVIOUS_EPISODE + Constants.TAG_HREF)));
                     links.setNextepisode(c.getString(c.getColumnIndex(Constants.TAG_LINKS + Constants.TAG_NEXT_EPISODE + Constants.TAG_HREF)));
                     show.setLinks(links);
-                    show.setEpisodes(getEpisodes(contentResolver, show.getId()));
+                    if (getEpisodes) {
+                        show.setEpisodes(getEpisodes(contentResolver, show.getId()));
+                    }
 
                     suggestedShows.add(show);
                 } while (c.moveToNext());
