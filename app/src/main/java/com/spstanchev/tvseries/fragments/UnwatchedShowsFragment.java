@@ -44,8 +44,6 @@ public class UnwatchedShowsFragment extends Fragment implements AdapterView.OnIt
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         adapter = new UnwatchedShowsAdapter(activity);
-        //query the db
-        getShowsFromDb();
     }
 
     @Override
@@ -59,6 +57,11 @@ public class UnwatchedShowsFragment extends Fragment implements AdapterView.OnIt
         View rootView = inflater.inflate(R.layout.fragment_unwatched_shows, container, false);
         ListView lvMyShows = (ListView) rootView.findViewById(R.id.lvUnwatchedShows);
         lvMyShows.setAdapter(adapter);
+        if (savedInstanceState != null){
+            myUnwatchedShows = savedInstanceState.getParcelableArrayList("myUnwatchedShows");
+            if (myUnwatchedShows != null)
+                adapter.updateCollection(myUnwatchedShows);
+        }
         lvMyShows.setOnItemClickListener(this);
         tvEmpty = (TextView) rootView.findViewById(R.id.tvEmptyUnwatchedList);
         tvEmpty.setVisibility(View.GONE);
@@ -68,7 +71,7 @@ public class UnwatchedShowsFragment extends Fragment implements AdapterView.OnIt
     @Override
     public void onResume() {
         super.onResume();
-        //query again in case there were updates
+        //query the db
         getShowsFromDb();
     }
 
@@ -166,5 +169,11 @@ public class UnwatchedShowsFragment extends Fragment implements AdapterView.OnIt
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("myUnwatchedShows", myUnwatchedShows);
+        super.onSaveInstanceState(outState);
     }
 }

@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -37,14 +36,12 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
     private MyShowsAdapter adapter;
     private ArrayList<Show> myShows;
     private TextView tvEmpty;
-    private ImageView ivBtnAddShow;
+    private ImageButton btnAddShow;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         adapter = new MyShowsAdapter(activity);
-        //query the database
-        getShowsFromDb();
     }
 
     @Override
@@ -56,7 +53,7 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_my_shows, container, false);
-        ImageButton btnAddShow = (ImageButton) rootView.findViewById(R.id.btnAddShow);
+        btnAddShow = (ImageButton) rootView.findViewById(R.id.btnAddShow);
         ListView lvMyShows = (ListView) rootView.findViewById(R.id.lvMyShows);
         lvMyShows.setAdapter(adapter);
         lvMyShows.setOnItemClickListener(this);
@@ -71,7 +68,7 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
 
 
         tvEmpty = (TextView) rootView.findViewById(R.id.tvEmptyShowList);
-        ivBtnAddShow = (ImageView) rootView.findViewById(R.id.btnAddShow);
+
 
         return rootView;
     }
@@ -79,7 +76,7 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
     @Override
     public void onResume() {
         super.onResume();
-        //query again in case there were updates
+        //query the db
         getShowsFromDb();
     }
 
@@ -102,13 +99,13 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
             myShows = shows;
             adapter.updateCollection(myShows);
             tvEmpty.setVisibility(View.GONE);
-            ivBtnAddShow.setVisibility(View.GONE);
+            btnAddShow.setVisibility(View.GONE);
 
         } else {
             myShows = new ArrayList<>();
             adapter.updateCollection(myShows);
             tvEmpty.setVisibility(View.VISIBLE);
-            ivBtnAddShow.setVisibility(View.VISIBLE);
+            btnAddShow.setVisibility(View.VISIBLE);
         }
 
     }
