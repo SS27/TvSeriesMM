@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -56,6 +57,11 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
         btnAddShow = (ImageButton) rootView.findViewById(R.id.btnAddShow);
         ListView lvMyShows = (ListView) rootView.findViewById(R.id.lvMyShows);
         lvMyShows.setAdapter(adapter);
+        if (savedInstanceState != null){
+            myShows = savedInstanceState.getParcelableArrayList("myShows");
+            if (myShows != null)
+                adapter.updateCollection(myShows);
+        }
         lvMyShows.setOnItemClickListener(this);
 
         btnAddShow.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +139,7 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
 
             @Override
             public boolean onQueryTextChange(String s) {
-                if (s.isEmpty()) {
+                if (TextUtils.isEmpty(s) && myShows != null) {
                     adapter.updateCollection(myShows);
                     return true;
                 }
@@ -156,6 +162,11 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("myShows", myShows);
+        super.onSaveInstanceState(outState);
     }
 }
