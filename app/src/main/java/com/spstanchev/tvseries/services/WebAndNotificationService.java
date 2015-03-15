@@ -150,11 +150,9 @@ public class WebAndNotificationService extends IntentService {
         inboxStyle.setBigContentTitle(contentTitle);
         inboxStyle.setSummaryText("TvSeries");
         for (AiringEpisode episode : episodes) {
-            Date episodeAirdate = Utils.getDateFromString(episode.getEpisode().getAirstamp(), Utils.getJsonAirstampFormat());
-            String episodeAirtime = Utils.getAirtimeFormat().format(episodeAirdate);
-            inboxStyle.addLine(episode.getShowName() + "  S" + episode.getEpisode().getSeason()
-                    + "E" + episode.getEpisode().getNumber() + " on " + episode.getNetworkName()
-                    + " at " + episodeAirtime);
+            inboxStyle.addLine(episode.getShowName() + " S" + episode.getEpisode().getSeason()
+                    + "E" + episode.getEpisode().getNumber() + " " + episode.getEpisode().getAirtime()
+                    + " on " + episode.getNetworkName());
         }
 
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),
@@ -162,7 +160,7 @@ public class WebAndNotificationService extends IntentService {
 
         NotificationCompat.Builder summaryNotificationBuilder = new NotificationCompat.Builder(this)
                 .setContentTitle(contentTitle)
-                .setSmallIcon(R.drawable.tv_series_thin)
+                .setSmallIcon(R.drawable.tv_series)
                 .setLargeIcon(largeIcon)
                 .setStyle(inboxStyle)
                 .setGroup(GROUP_KEY_AIRING_EPISODES)

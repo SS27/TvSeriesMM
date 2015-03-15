@@ -82,8 +82,8 @@ public class ShowInfoActivity extends ActionBarActivity {
         if (show.getImage() != null) {
             Picasso.with(this)
                     .load(show.getImage().getMedium())
-                    .placeholder(R.drawable.tv_series)
-                    .error(R.drawable.tv_series)
+                    .placeholder(R.drawable.no_poster_available)
+                    .error(R.drawable.no_poster_available)
                     .into(ivPoster);
         }
     }

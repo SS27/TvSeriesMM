@@ -110,8 +110,8 @@ public class SuggestedShowsAdapter extends BaseAdapter {
         Picasso.with(context)
                 .load(currentShow.getImage().getMedium())
                         //.resize(210, 295)
-                .placeholder(R.drawable.tv_series)
-                .error(R.drawable.tv_series)
+                .placeholder(R.drawable.no_poster_available)
+                .error(R.drawable.no_poster_available)
                 .into(ivPoster);
 
         return convertView;

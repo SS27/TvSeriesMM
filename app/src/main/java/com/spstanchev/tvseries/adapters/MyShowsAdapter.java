@@ -84,8 +84,8 @@ public class MyShowsAdapter extends BaseAdapter implements Filterable {
             Picasso.with(context)
                     .load(currentShow.getImage().getMedium())
                     .resize(250, 350)
-                    .placeholder(R.drawable.tv_series)
-                    .error(R.drawable.tv_series)
+                    .placeholder(R.drawable.no_poster_available)
+                    .error(R.drawable.no_poster_available)
                     .into(ivPoster);
         }
         tvName.setText(currentShow.getName());
