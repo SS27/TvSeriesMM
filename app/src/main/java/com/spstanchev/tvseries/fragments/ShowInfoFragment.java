@@ -54,14 +54,21 @@ public class ShowInfoFragment extends DialogFragment {
         ImageView credits = (ImageView) layout.findViewById(R.id.textViewCredits);
         TextView network = (TextView) layout.findViewById(R.id.textViewNetwork);
         TextView status = (TextView) layout.findViewById(R.id.textViewStatus);
+        TextView staring = (TextView) layout.findViewById(R.id.textViewStaring);
 
         title.setText(addedShow.getShow().getName());
         summary.setText(addedShow.getShow().getSummary());
         network.setText("Network: " + addedShow.getShow().getNetwork().getName());
         status.setText("Status: " + addedShow.getShow().getStatus());
         type.setText("Type: " + addedShow.getShow().getType());
-        runtime.setText("Runtime: " + addedShow.getShow().getRuntime());
+        runtime.setText("Runtime: " + addedShow.getShow().getRuntime() + " minutes");
         premiered.setText("Premiered on: " + addedShow.getShow().getPremiered());
+        if (addedShow.getShow().getCast().isEmpty()){
+            staring.setVisibility(View.GONE);
+        }
+        else {
+            staring.setText(getStaringLabel());
+        }
 
         credits.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +91,16 @@ public class ShowInfoFragment extends DialogFragment {
         builder.setNegativeButton("Back to list", null);
 
         return builder.create();
+    }
+
+    private String getStaringLabel() {
+        String staringLabel = "Staring:\n";
+        for (int i=0; i < addedShow.getShow().getCast().size(); i++){
+            staringLabel = staringLabel.concat(addedShow.getShow().getCast().get(i).getPerson().getName()+"\n");
+            if (i == 2)
+                break;
+        }
+        return staringLabel;
     }
 
 

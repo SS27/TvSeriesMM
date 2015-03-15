@@ -23,6 +23,7 @@ public class Show implements Parcelable {
     private String summary;
     private Links links;
     private ArrayList<Episode> episodes;
+    private ArrayList<Cast> cast;
 
     public Show() {
     }
@@ -203,6 +204,14 @@ public class Show implements Parcelable {
         this.episodes = episodes;
     }
 
+    public ArrayList<Cast> getCast() {
+        return cast;
+    }
+
+    public void setCast(ArrayList<Cast> cast) {
+        this.cast = cast;
+    }
+
     protected Show(Parcel in) {
         id = in.readInt();
         url = in.readString();
@@ -218,6 +227,8 @@ public class Show implements Parcelable {
         links = (Links) in.readValue(Links.class.getClassLoader());
         episodes = new ArrayList<>();
         in.readTypedList(episodes, Episode.CREATOR);
+        cast = new ArrayList<>();
+        in.readTypedList(cast, Cast.CREATOR);
     }
 
     @Override
@@ -240,6 +251,7 @@ public class Show implements Parcelable {
         dest.writeString(summary);
         dest.writeValue(links);
         dest.writeTypedList(episodes);
+        dest.writeTypedList(cast);
     }
 
     public static final Parcelable.Creator<Show> CREATOR = new Parcelable.Creator<Show>() {

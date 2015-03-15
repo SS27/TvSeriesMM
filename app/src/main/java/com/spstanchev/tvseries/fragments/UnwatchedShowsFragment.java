@@ -79,7 +79,7 @@ public class UnwatchedShowsFragment extends Fragment implements AdapterView.OnIt
     private void getShowsAndEpisodesFromDb() {
         //query db for current shows
         AsyncQueryShowsFromDb queryAsyncTask = new AsyncQueryShowsFromDb(this, getActivity().getContentResolver());
-        queryAsyncTask.execute(true);
+        queryAsyncTask.execute(true, false);
     }
 
     @Override

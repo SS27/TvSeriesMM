@@ -22,7 +22,7 @@ public class AsyncQueryShowsFromDb extends AsyncTask<Boolean, Void, ArrayList<Sh
 
     @Override
     protected ArrayList<Show> doInBackground(Boolean... params) {
-        return ShowProvider.Helper.getShows(contentResolver, params[0]);
+        return ShowProvider.Helper.getShows(contentResolver, params[0], params[1]);
     }
 
     @Override

@@ -51,7 +51,7 @@ public class WebAndNotificationService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         //get current shows from DB
-        ArrayList<Show> shows = ShowProvider.Helper.getShows(getContentResolver(), true);
+        ArrayList<Show> shows = ShowProvider.Helper.getShows(getContentResolver(), true, false);
         if (shows != null) {
             //check for airing episodes and display notification
             checkForAiringEpisodes(shows);

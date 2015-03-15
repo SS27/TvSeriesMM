@@ -65,9 +65,9 @@ public interface Constants {
     public static final String EPISODES_URL = "content://" + AUTHORITY + "/" + TABLE_EPISODES;
     public static final Uri EPISODES_CONTENT_URI = Uri.parse(EPISODES_URL);
     public static final String EPISODES_SHOW_ID_URL = "content://" + AUTHORITY + "/" + TABLE_EPISODES + TAG_SHOW_ID;
-    public static final Uri EPISODES_SHOW_ID_CONTENT_URI = Uri.parse(EPISODES_SHOW_ID_URL);
     public static final String CAST_URL = "content://" + AUTHORITY + "/" + TABLE_CAST;
     public static final Uri CAST_CONTENT_URI = Uri.parse(CAST_URL);
+    public static final String CAST_SHOW_ID_URL = "content://" + AUTHORITY + "/" + TABLE_CAST + TAG_SHOW_ID;
 
     //Suggested shows ids
     //public static final int[] suggestedShowsIds = {335, 13, 2, 67, 58, 6, 177, 111, 63, 62, 210, 73, 133, 31, 88};

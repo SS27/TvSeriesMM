@@ -1,26 +1,31 @@
 package com.spstanchev.tvseries.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Stefan on 2/8/2015.
  */
-public class Person {
-    private Integer id;
+public class Person implements Parcelable {
+    private int id;
     private String url;
     private String name;
     private Image image;
-    private com.spstanchev.tvseries.models.Links Links;
+
+    public Person (){
+    }
 
     /**
      * @return The id
      */
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
     /**
      * @param id The id
      */
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -66,17 +71,36 @@ public class Person {
         this.image = image;
     }
 
-    /**
-     * @return The Links
-     */
-    public com.spstanchev.tvseries.models.Links getLinks() {
-        return Links;
+    protected Person(Parcel in) {
+        id = in.readInt();
+        url = in.readString();
+        name = in.readString();
+        image = (Image) in.readValue(Image.class.getClassLoader());
     }
 
-    /**
-     * @param Links The _links
-     */
-    public void setLinks(com.spstanchev.tvseries.models.Links Links) {
-        this.Links = Links;
+    @Override
+    public int describeContents() {
+        return 0;
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(url);
+        dest.writeString(name);
+        dest.writeValue(image);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Person> CREATOR = new Parcelable.Creator<Person>() {
+        @Override
+        public Person createFromParcel(Parcel in) {
+            return new Person(in);
+        }
+
+        @Override
+        public Person[] newArray(int size) {
+            return new Person[size];
+        }
+    };
 }

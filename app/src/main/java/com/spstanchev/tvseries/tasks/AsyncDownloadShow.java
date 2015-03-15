@@ -7,11 +7,13 @@ import android.util.Log;
 import com.spstanchev.tvseries.common.Constants;
 import com.spstanchev.tvseries.common.HttpHandler;
 import com.spstanchev.tvseries.common.JsonUtils;
+import com.spstanchev.tvseries.models.Cast;
 import com.spstanchev.tvseries.models.Country;
 import com.spstanchev.tvseries.models.Episode;
 import com.spstanchev.tvseries.models.Image;
 import com.spstanchev.tvseries.models.Links;
 import com.spstanchev.tvseries.models.Network;
+import com.spstanchev.tvseries.models.Person;
 import com.spstanchev.tvseries.models.Show;
 
 import org.json.JSONArray;
@@ -48,6 +50,10 @@ public class AsyncDownloadShow extends AsyncTask<String, Void, ArrayList<Show>> 
             Log.d(TAG, String.format("Episodes json response is: %s\n", response));
             ArrayList<Episode> episodes = getEpisodes(response);
             show.setEpisodes(episodes);
+            response = httpHandler.makeHttpCall(show.getLinks().getCast(), HttpHandler.GET, null);
+            Log.d(TAG, String.format("Cast json response is: %s\n", response));
+            ArrayList<Cast> cast = getCast(response);
+            show.setCast(cast);
         }
 
         return shows;
@@ -55,12 +61,10 @@ public class AsyncDownloadShow extends AsyncTask<String, Void, ArrayList<Show>> 
 
     @Override
     protected void onPostExecute(ArrayList<Show> shows) {
-        if (!shows.isEmpty()) {
             if (isQuery)
                 asyncJsonResponse.handleQueryShowsJsonResponse(shows);
-            else
+            else if (!shows.isEmpty())
                 asyncJsonResponse.handleShowJsonResponse(shows.get(0));
-        }
     }
 
     private ArrayList<Show> getShowsFromJson(String result) {
@@ -133,8 +137,8 @@ public class AsyncDownloadShow extends AsyncTask<String, Void, ArrayList<Show>> 
         return network;
     }
 
-    private Image getImage(JSONObject showJsonObject) {
-        JSONObject imageJsonObject = JsonUtils.getJSONObjectSafely(showJsonObject, Constants.TAG_IMAGE);
+    private Image getImage(JSONObject jsonObject) {
+        JSONObject imageJsonObject = JsonUtils.getJSONObjectSafely(jsonObject, Constants.TAG_IMAGE);
         Image image = new Image();
         image.setMedium(JsonUtils.getJsonString(imageJsonObject, Constants.TAG_MEDIUM));
         image.setOriginal(JsonUtils.getJsonString(imageJsonObject, Constants.TAG_ORIGINAL));
@@ -204,6 +208,56 @@ public class AsyncDownloadShow extends AsyncTask<String, Void, ArrayList<Show>> 
         episode.setSummary(Html.fromHtml(JsonUtils.getJsonString(jsonObject, Constants.TAG_SUMMARY)).toString());
         return episode;
     }
+
+
+    private ArrayList<Cast> getCast(String response) {
+        ArrayList<Cast> castList = new ArrayList<>();
+
+        //if we are downloading json array
+        try {
+            JSONArray castJsonArray = new JSONArray(response);
+            for (int i = 0; i < castJsonArray.length(); i++) {
+                Cast cast = getSingleCast(castJsonArray.getJSONObject(i));
+                if (cast != null)
+                    castList.add(cast);
+            }
+        } catch (JSONException e) {
+            Log.v(TAG, "Caught JsonException when trying to get JSONArray from " + response);
+        }
+
+        return castList;
+    }
+
+    private Cast getSingleCast(JSONObject jsonObject) {
+        Cast cast = new Cast();
+        cast.setPerson(getPerson(jsonObject));
+        cast.setCharacter(getCharacter(jsonObject));
+        return cast;
+    }
+
+
+    private Person getPerson(JSONObject jsonObject) {
+        JSONObject personJsonObject = JsonUtils.getJSONObjectSafely(jsonObject, Constants.TAG_PERSON);
+        Person person = new Person();
+        person.setId(JsonUtils.getJsonInteger(personJsonObject, Constants.TAG_ID));
+        person.setUrl(JsonUtils.getJsonString(personJsonObject, Constants.TAG_URL));
+        person.setName(JsonUtils.getJsonString(personJsonObject, Constants.TAG_NAME));
+        person.setImage(getImage(personJsonObject));
+        return person;
+    }
+
+    private Person getCharacter(JSONObject jsonObject) {
+        JSONObject characterJsonObject = JsonUtils.getJSONObjectSafely(jsonObject, Constants.TAG_CHARACTER);
+        Person person = new Person();
+        person.setId(JsonUtils.getJsonInteger(characterJsonObject, Constants.TAG_ID));
+        person.setUrl(JsonUtils.getJsonString(characterJsonObject, Constants.TAG_URL));
+        person.setName(JsonUtils.getJsonString(characterJsonObject, Constants.TAG_NAME));
+        person.setImage(getImage(characterJsonObject));
+        return person;
+
+    }
+
+
 
 }
 

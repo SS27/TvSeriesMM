@@ -65,14 +65,14 @@ public class DBHelper extends SQLiteOpenHelper {
     // Table cast create statement
     private static final String CREATE_TABLE_CAST = "CREATE TABLE " + Constants.TABLE_CAST +
             "(" + Constants.TAG_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            Constants.TAG_PERSON + Constants.TAG_URL + " TEXT NOT NULL, " +
-            Constants.TAG_PERSON + Constants.TAG_NAME + " TEXT NOT NULL, " +
-            Constants.TAG_PERSON + Constants.TAG_IMAGE + Constants.TAG_MEDIUM + " TEXT NOT NULL, " +
-            Constants.TAG_PERSON + Constants.TAG_IMAGE + Constants.TAG_ORIGINAL + " TEXT NOT NULL, " +
-            Constants.TAG_CHARACTER + Constants.TAG_URL + " TEXT NOT NULL, " +
-            Constants.TAG_CHARACTER + Constants.TAG_NAME + " TEXT NOT NULL, " +
-            Constants.TAG_CHARACTER + Constants.TAG_IMAGE + Constants.TAG_MEDIUM + " TEXT NOT NULL, " +
-            Constants.TAG_CHARACTER + Constants.TAG_IMAGE + Constants.TAG_ORIGINAL + " TEXT NOT NULL, " +
+            Constants.TAG_PERSON + Constants.TAG_URL + " TEXT, " +
+            Constants.TAG_PERSON + Constants.TAG_NAME + " TEXT, " +
+            Constants.TAG_PERSON + Constants.TAG_IMAGE + Constants.TAG_MEDIUM + " TEXT, " +
+            Constants.TAG_PERSON + Constants.TAG_IMAGE + Constants.TAG_ORIGINAL + " TEXT, " +
+            Constants.TAG_CHARACTER + Constants.TAG_URL + " TEXT, " +
+            Constants.TAG_CHARACTER + Constants.TAG_NAME + " TEXT, " +
+            Constants.TAG_CHARACTER + Constants.TAG_IMAGE + Constants.TAG_MEDIUM + " TEXT, " +
+            Constants.TAG_CHARACTER + Constants.TAG_IMAGE + Constants.TAG_ORIGINAL + " TEXT, " +
             Constants.TAG_SHOW_ID + " INTEGER NOT NULL" + ")";
 
     public DBHelper(Context context) {

@@ -14,11 +14,13 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.spstanchev.tvseries.common.Constants;
+import com.spstanchev.tvseries.models.Cast;
 import com.spstanchev.tvseries.models.Country;
 import com.spstanchev.tvseries.models.Episode;
 import com.spstanchev.tvseries.models.Image;
 import com.spstanchev.tvseries.models.Links;
 import com.spstanchev.tvseries.models.Network;
+import com.spstanchev.tvseries.models.Person;
 import com.spstanchev.tvseries.models.Show;
 
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ public class ShowProvider extends ContentProvider {
     private static final int EPISODE_SHOW_ID = 5;
     private static final int CAST = 6;
     private static final int CAST_ID = 7;
+    private static final int CAST_SHOW_ID = 8;
 
     private static final UriMatcher uriMatcher;
 
@@ -56,6 +59,7 @@ public class ShowProvider extends ContentProvider {
         uriMatcher.addURI(Constants.AUTHORITY, Constants.TABLE_EPISODES + Constants.TAG_SHOW_ID + "/#", EPISODE_SHOW_ID);
         uriMatcher.addURI(Constants.AUTHORITY, Constants.TABLE_CAST, CAST);
         uriMatcher.addURI(Constants.AUTHORITY, Constants.TABLE_CAST + "/#", CAST_ID);
+        uriMatcher.addURI(Constants.AUTHORITY, Constants.TABLE_CAST + Constants.TAG_SHOW_ID + "/#", CAST_SHOW_ID);
     }
 
     @Override
@@ -102,6 +106,11 @@ public class ShowProvider extends ContentProvider {
                 queryBuilder.setTables(Constants.TABLE_CAST);
                 queryBuilder.setProjectionMap(castProjectionMap);
                 queryBuilder.appendWhere(Constants.TAG_ID + "=" + uri.getLastPathSegment());
+                break;
+            case CAST_SHOW_ID:
+                queryBuilder.setTables(Constants.TABLE_CAST);
+                queryBuilder.setProjectionMap(castProjectionMap);
+                queryBuilder.appendWhere(Constants.TAG_SHOW_ID + "=" + uri.getLastPathSegment());
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -211,6 +220,12 @@ public class ShowProvider extends ContentProvider {
                 count = database.delete(Constants.TABLE_CAST, Constants.TAG_ID + " = " + id +
                         (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
                 break;
+            case CAST_SHOW_ID:
+                //get the id
+                id = uri.getLastPathSegment();
+                count = database.delete(Constants.TABLE_CAST, Constants.TAG_SHOW_ID + " = " + id +
+                        (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""), selectionArgs);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -308,6 +323,12 @@ public class ShowProvider extends ContentProvider {
                 }
             }
 
+            for (Cast cast : show.getCast()){
+                if (!addCast(contentResolver, cast, show.getId())) {
+                    return false;
+                }
+            }
+
             return true;
         }
 
@@ -316,7 +337,7 @@ public class ShowProvider extends ContentProvider {
             int rowNum = contentResolver.delete(contentUriWithId, null, null);
             Log.d(TAG, "Removing a row from show table... Number of rows removed is " + rowNum);
 
-            return (rowNum == 1 && deleteEpisodes(contentResolver, id));
+            return (rowNum == 1 && deleteEpisodes(contentResolver, id) && deleteCast(contentResolver, id));
 
         }
 
@@ -365,7 +386,7 @@ public class ShowProvider extends ContentProvider {
             }
         }
 
-        public static ArrayList<Show> getShows(ContentResolver contentResolver, boolean getEpisodes) {
+        public static ArrayList<Show> getShows(ContentResolver contentResolver, boolean fetchEpisodes, boolean fetchCast) {
             Cursor c = contentResolver.query(Constants.SHOW_CONTENT_URI, null, null, null, Constants.TAG_NAME);
             ArrayList<Show> suggestedShows = new ArrayList<>();
 
@@ -405,8 +426,11 @@ public class ShowProvider extends ContentProvider {
                     links.setPreviousepisode(c.getString(c.getColumnIndex(Constants.TAG_LINKS + Constants.TAG_PREVIOUS_EPISODE + Constants.TAG_HREF)));
                     links.setNextepisode(c.getString(c.getColumnIndex(Constants.TAG_LINKS + Constants.TAG_NEXT_EPISODE + Constants.TAG_HREF)));
                     show.setLinks(links);
-                    if (getEpisodes) {
+                    if (fetchEpisodes){
                         show.setEpisodes(getEpisodes(contentResolver, show.getId()));
+                    }
+                    if (fetchCast){
+                        show.setCast(getCast(contentResolver, show.getId()));
                     }
 
                     suggestedShows.add(show);
@@ -451,7 +475,7 @@ public class ShowProvider extends ContentProvider {
             ArrayList<Episode> episodes = new ArrayList<>();
 
             if (!c.moveToFirst()) {
-                Log.w(TAG, "No content in DB yet!");
+                Log.w(TAG, "No episodes content in DB yet!");
                 c.close();
                 return null;
             } else {
@@ -502,6 +526,68 @@ public class ShowProvider extends ContentProvider {
             int rowsNum = contentResolver.update(contentUriWithId, values, null, null);
             Log.d(TAG, "Updating row in episodes table... Number of rows updated is " + rowsNum);
             return (rowsNum == 1);
+        }
+
+        private static boolean addCast(ContentResolver contentResolver, Cast cast, int showId) {
+            ContentValues values = new ContentValues();
+            values.put(Constants.TAG_PERSON + Constants.TAG_URL, cast.getPerson().getUrl());
+            values.put(Constants.TAG_PERSON + Constants.TAG_NAME, cast.getPerson().getName());
+            values.put(Constants.TAG_PERSON + Constants.TAG_IMAGE + Constants.TAG_MEDIUM, cast.getPerson().getImage().getMedium());
+            values.put(Constants.TAG_PERSON + Constants.TAG_IMAGE + Constants.TAG_ORIGINAL, cast.getPerson().getImage().getOriginal());
+            values.put(Constants.TAG_CHARACTER + Constants.TAG_URL, cast.getCharacter().getUrl());
+            values.put(Constants.TAG_CHARACTER + Constants.TAG_NAME, cast.getCharacter().getName());
+            values.put(Constants.TAG_CHARACTER + Constants.TAG_IMAGE + Constants.TAG_MEDIUM, cast.getCharacter().getImage().getMedium());
+            values.put(Constants.TAG_CHARACTER + Constants.TAG_IMAGE + Constants.TAG_ORIGINAL, cast.getCharacter().getImage().getOriginal());
+            values.put(Constants.TAG_SHOW_ID, showId);
+
+            Uri uri = contentResolver.insert(Constants.CAST_CONTENT_URI, values);
+            Log.d(TAG, "Inserting new row to cast table... Returned uri is " + uri);
+            return (uri != null);
+
+        }
+
+        private static boolean deleteCast(ContentResolver contentResolver, int id) {
+            Uri contentUriWithId = Uri.parse(Constants.CAST_SHOW_ID_URL + "/" + id);
+            int rowNum = contentResolver.delete(contentUriWithId, null, null);
+            Log.d(TAG, "Removing a rows from the cast table... Number of rows removed is " + rowNum);
+            return (rowNum > 0);
+        }
+
+        private static ArrayList<Cast> getCast(ContentResolver contentResolver, int id) {
+            Uri contentUriWithId = Uri.parse(Constants.CAST_SHOW_ID_URL + "/" + id);
+            Cursor c = contentResolver.query(contentUriWithId, null, null, null, "");
+            ArrayList<Cast> castList = new ArrayList<>();
+
+            if (!c.moveToFirst()) {
+                Log.w(TAG, "No castList content in DB yet!");
+                c.close();
+                return null;
+            } else {
+                do {
+                    Person person = new Person();
+                    Image personImage = new Image();
+                    person.setUrl(c.getString(c.getColumnIndex(Constants.TAG_PERSON + Constants.TAG_URL)));
+                    person.setName(c.getString(c.getColumnIndex(Constants.TAG_PERSON + Constants.TAG_NAME)));
+                    personImage.setMedium(c.getString(c.getColumnIndex(Constants.TAG_PERSON + Constants.TAG_IMAGE + Constants.TAG_MEDIUM)));
+                    personImage.setOriginal(c.getString(c.getColumnIndex(Constants.TAG_PERSON + Constants.TAG_IMAGE + Constants.TAG_ORIGINAL)));
+                    person.setImage(personImage);
+                    Person character = new Person();
+                    Image characterImage = new Image();
+                    character.setUrl(c.getString(c.getColumnIndex(Constants.TAG_CHARACTER + Constants.TAG_URL)));
+                    character.setName(c.getString(c.getColumnIndex(Constants.TAG_CHARACTER + Constants.TAG_NAME)));
+                    characterImage.setMedium(c.getString(c.getColumnIndex(Constants.TAG_CHARACTER + Constants.TAG_IMAGE + Constants.TAG_MEDIUM)));
+                    characterImage.setOriginal(c.getString(c.getColumnIndex(Constants.TAG_CHARACTER + Constants.TAG_IMAGE + Constants.TAG_ORIGINAL)));
+                    character.setImage(characterImage);
+                    Cast cast = new Cast();
+                    cast.setPerson(person);
+                    cast.setCharacter(character);
+                    //cast.setShowId(id);
+
+                    castList.add(cast);
+                } while (c.moveToNext());
+                c.close();
+                return castList;
+            }
         }
     }
 }

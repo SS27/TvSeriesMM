@@ -89,7 +89,7 @@ public class MyShowsFragment extends Fragment implements AdapterView.OnItemClick
     private void getShowsFromDb() {
         //query db for current shows
         AsyncQueryShowsFromDb queryAsyncTask = new AsyncQueryShowsFromDb(this, getActivity().getContentResolver());
-        queryAsyncTask.execute(false);
+        queryAsyncTask.execute(false, true);
     }
 
     @Override

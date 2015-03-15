@@ -30,5 +30,7 @@
     <string name="label_btn_watched">Watched</string>
     <string name="label_btn_unwatched">Unwatched</string>
     <string name="add_shows">Add shows</string>
+    <string name="string_as">as</string>
+    <string name="text_cast">Cast:</string>
 
 </resources>
