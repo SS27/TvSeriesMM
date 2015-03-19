@@ -1,6 +1,8 @@
 package com.spstanchev.tvseries.adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +92,16 @@ public class MyShowsAdapter extends BaseAdapter implements Filterable {
         }
         tvName.setText(currentShow.getName());
         ratingBar.setRating((float) (currentShow.getRatingAverage() * 0.5));
-        tvYear.setText("Release year: " + currentShow.getPremiered().substring(0, 4));
+        String year = "";
+        if (!TextUtils.isEmpty(currentShow.getPremiered())){
+            try {
+                year = currentShow.getPremiered().substring(0, 4);
+            }
+            catch (IndexOutOfBoundsException e){
+                Log.e (TAG, "Error! Not a valid premiered value!", e);
+            }
+        }
+        tvYear.setText("Release year: " + year);
         tvCountry.setText("Country: " + currentShow.getNetwork().getCountry().getName());
 
         return convertView;

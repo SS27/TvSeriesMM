@@ -208,8 +208,12 @@ public class SearchShowActivity extends ActionBarActivity implements AsyncJsonRe
 
     @Override
     public void doPositiveClick(AddedShow addedShow, int position) {
-        AsyncAddOrDeleteShowInDb deleteAsyncTask = new AsyncAddOrDeleteShowInDb(getContentResolver(), addedShow.isAdded());
-        deleteAsyncTask.execute(addedShow.getShow());
+        if (addedShow.getShow().getEpisodes().isEmpty()){
+            Toast.makeText(this, "Sorry, " + addedShow.getShow().getName() + " doesn't have episodes information yet and currently cannot be added!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        AsyncAddOrDeleteShowInDb addOrDeleteAsyncTask = new AsyncAddOrDeleteShowInDb(getContentResolver(), addedShow.isAdded());
+        addOrDeleteAsyncTask.execute(addedShow.getShow());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if (addedShow.isAdded()){
             editor.remove("Show" + addedShow.getShow().getId());

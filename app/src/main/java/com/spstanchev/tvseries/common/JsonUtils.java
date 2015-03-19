@@ -14,7 +14,8 @@ public class JsonUtils {
     public static String getJsonString(JSONObject currentJsonObject, String tag) {
         if (currentJsonObject != null) {
             try {
-                return currentJsonObject.getString(tag);
+                if (!currentJsonObject.isNull(tag))
+                    return currentJsonObject.getString(tag);
             } catch (JSONException e) {
                 Log.v(TAG, "Caught JsonException when trying to get JSONObject with name " + tag + " from " + currentJsonObject.toString());
             }
@@ -25,7 +26,8 @@ public class JsonUtils {
     public static int getJsonInteger(JSONObject currentJsonObject, String tag) {
         if (currentJsonObject != null) {
             try {
-                return currentJsonObject.getInt(tag);
+                if (!currentJsonObject.isNull(tag))
+                    return currentJsonObject.getInt(tag);
             } catch (JSONException e) {
                 Log.v(TAG, "Caught JsonException when trying to get JSONObject with name " + tag + " from " + currentJsonObject.toString());
             }
@@ -36,7 +38,8 @@ public class JsonUtils {
     public static double getJsonDouble(JSONObject currentJsonObject, String tag) {
         if (currentJsonObject != null) {
             try {
-                return currentJsonObject.getDouble(tag);
+                if (!currentJsonObject.isNull(tag))
+                    return currentJsonObject.getDouble(tag);
             } catch (JSONException e) {
                 Log.v(TAG, "Caught JsonException when trying to get JSONObject with name " + tag + " from " + currentJsonObject.toString());
             }
