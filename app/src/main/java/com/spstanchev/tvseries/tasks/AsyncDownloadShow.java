@@ -46,11 +46,11 @@ public class AsyncDownloadShow extends AsyncTask<String, Void, ArrayList<Show>> 
         Log.d(TAG, String.format("Show json response is: %s\n", response));
         ArrayList<Show> shows = getShowsFromJson(response);
         for (Show show : shows) {
-            response = httpHandler.makeHttpCall(params[0] + Constants.JSON_EPISODES_URL, HttpHandler.GET, null);
+            response = httpHandler.makeHttpCall(Constants.JSON_SHOW_URL + show.getId() + Constants.JSON_EPISODES_URL, HttpHandler.GET, null);
             Log.d(TAG, String.format("Episodes json response is: %s\n", response));
             ArrayList<Episode> episodes = getEpisodes(response);
             show.setEpisodes(episodes);
-            response = httpHandler.makeHttpCall(params[0] + Constants.JSON_CAST_URL, HttpHandler.GET, null);
+            response = httpHandler.makeHttpCall(Constants.JSON_SHOW_URL + show.getId() + Constants.JSON_CAST_URL, HttpHandler.GET, null);
             Log.d(TAG, String.format("Cast json response is: %s\n", response));
             ArrayList<Cast> cast = getCast(response);
             show.setCast(cast);
