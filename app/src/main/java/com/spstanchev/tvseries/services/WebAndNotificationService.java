@@ -113,7 +113,7 @@ public class WebAndNotificationService extends IntentService {
         Date currentDate = getCurrentDate();
 
         for (Show show : shows) {
-            ArrayList<Episode> jsonEpisodes = getEpisodes(httpHandler.makeHttpCall(show.getLinks().getEpisodes(), HttpHandler.GET, null));
+            ArrayList<Episode> jsonEpisodes = getEpisodes(httpHandler.makeHttpCall(Constants.JSON_SHOW_URL + show.getId()+ Constants.JSON_EPISODES_URL, HttpHandler.GET, null));
             if (jsonEpisodes.size() > show.getEpisodes().size()) {
                 //there are new episodes, add them to db
                 for (int i = show.getEpisodes().size(); i < jsonEpisodes.size(); i++) {

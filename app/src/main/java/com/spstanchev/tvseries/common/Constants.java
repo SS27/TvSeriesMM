@@ -14,6 +14,8 @@ public interface Constants {
     //JSON URLs
     public static final String JSON_SHOW_URL = "http://api.tvmaze.com/shows/";
     public static final String JSON_QUERY_SHOWS_URL = "http://api.tvmaze.com/search/shows?q=";
+    public static final String JSON_EPISODES_URL = "/episodes";
+    public static final String JSON_CAST_URL = "/cast";
 
     //JSON TAGS for SHOWS
     public static final String TAG_SHOW = "show";
